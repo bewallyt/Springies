@@ -1,8 +1,11 @@
+import simulation.XMLParser;
 import springies.Springies;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -25,6 +28,11 @@ public class Main
      */
     public static void main (String args[])
     {
+    	
+    	XMLParser test = new XMLParser();
+    	test.readXML("assets/daintywalker.xml", "mass");
+    	test.readXML("assets/daintywalker.xml", "spring");
+    	test.readXML("assets/daintywalker.xml", "muscle");
         // view of user's content
         final Springies sp = new Springies();
         JButton jb = new JButton("Make new Ball");
