@@ -28,13 +28,12 @@ public class Main
      */
     public static void main (String args[])
     {
-    	XMLParser test = new XMLParser();
     	
+    	XMLParser test = new XMLParser();
     	test.readXML("assets/daintywalker.xml", "mass");
     	test.readXML("assets/daintywalker.xml", "spring");
     	test.readXML("assets/daintywalker.xml", "muscle");
-  
-    	
+
         // view of user's content
         final Springies sp = new Springies();
         JButton jb = new JButton("Make new Ball");

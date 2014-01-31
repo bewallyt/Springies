@@ -47,9 +47,8 @@ public class Mass extends PhysicalObjectRect{
 	}
 	
 	
-	
-	
-	
-	
-	
 }
+	
+	
+	
+	
