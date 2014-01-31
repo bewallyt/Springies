@@ -33,6 +33,7 @@ public class Main
     	test.readXML("assets/daintywalker.xml", "mass");
     	test.readXML("assets/daintywalker.xml", "spring");
     	test.readXML("assets/daintywalker.xml", "muscle");
+
         // view of user's content
         final Springies sp = new Springies();
         JButton jb = new JButton("Make new Ball");
