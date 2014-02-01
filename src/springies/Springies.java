@@ -75,6 +75,18 @@ public class Springies extends JGEngine
         ball.setPos(displayWidth() / 2, displayHeight() / 2);
         ball.setForce(8000, -10000);
     }
+    
+	/**
+	 * Instantiate objects from XML files below.
+	 */
+    
+    public void createModels(){
+    	
+    	
+    	
+    }
+    
+    
 
     private void addWalls ()
     {

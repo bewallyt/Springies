@@ -24,9 +24,8 @@ public class XMLParser {
 			doc.getDocumentElement().normalize();
 
 			/**
-			 * Reads model in depending on type: mass(es), spring(s), fixed,
-			 * muscle. Reads environment in depending on type: gravity,
-			 * viscosity, centermass, wall.
+			 * Reads model in depending on type: mass(es), spring(s), fixed, muscle. 
+			 * Reads environment in depending on type: gravity, viscosity, centermass, wall.
 			 */
 
 			NodeList nodes = doc.getElementsByTagName(type);
