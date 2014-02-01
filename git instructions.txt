@@ -1,0 +1,38 @@
+Changed code. (make sure you checked out your branch)
+
+git status
+If there is stuff to add/commit
+
+git add —all
+git commit —all (essentially saving)
+
+git pull (url) inyoung
+
+git push origin inyoung
+
+(now inyoung on github is updated)
+
+git checkout master (for security)
+
+git pull origin master (to local)
+
+git checkout inyoung 
+
+git pull origin master (merge master to inyoung locally)
+
+fix conflicts if any
+
+git push origin inyoung (update inyoung again)
+
+git checkout master
+
+git pull origin inyoung (into master to update local master)
+
+fix conflicts if any (shouldn’t be any)
+
+git pull origin master (to check if updated)
+
+fix conflicts if any
+
+git push origin master
+
