@@ -7,16 +7,18 @@ import jgame.JGColor;
 public class Mass extends PhysicalObjectRect{
 
 	/* Hooks onto Spring. */
-	private double hookX,hookY;
+	double hookX;
+
+	double hookY;
 			
 	/* Object Dimensions. */
 	private double massHeight, massWidth;
 	
 	/* Constructor */
-	public Mass(int collisionId,double width,double height, 
+	public Mass(String id,double width,double height, 
 			double xCoord, double yCoord, double mass,double xv,
 			double yv) {
-		super("mass", collisionId, JGColor.black, width, height, mass);
+		super(id, 0, JGColor.black, width, height, mass);
 		
 		massHeight = height;
 		massWidth = width;

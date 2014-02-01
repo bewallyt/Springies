@@ -1,19 +1,38 @@
 package simulation;
 
 import jboxGlue.PhysicalObject;
+import jgame.JGColor;
 
 public class Spring extends PhysicalObject{
 
-	protected Spring(int collisionId, String id1, String id2, double restLength,
+	private Mass myMass1,myMass2;
+	private double myRestLength;
+	private double mySpringyness;
+	
+	/*Spring constructor with springyness*/
+	protected Spring(Mass m1, Mass m2, double restL,
 			double springyness) {
-		super("spring", collisionId, "spring");
-		// TODO Auto-generated constructor stub
+		super("spring", 0, JGColor.blue);
+		myMass1 = m1;
+		myMass2 = m2;
+		myRestLength = restL;
+		mySpringyness = springyness;
 	}
-
+	
+	/*Spring constructor without springyness*/
+	protected Spring(Mass m1, Mass m2, double restL) {
+		super("spring", 0, JGColor.blue);
+		myMass1 = m1;
+		myMass2 = m2;
+		myRestLength = restL;
+		mySpringyness = 1;
+	}
+	
 	@Override
 	protected void paintShape() {
-		// TODO Auto-generated method stub
-		
+		myEngine.drawLine(myMass1.hookX, myMass1.hookY, 
+				myMass2.hookX, myMass2.hookY);
+		myEngine.setColor(myColor);
 	}
 	
 
