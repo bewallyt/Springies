@@ -27,6 +27,8 @@ public class Mass extends PhysicalObjectRect{
 		this.xspeed = xv;
 		this.yspeed = yv;
 		
+		//Should mass hooks be at the center of the mass?
+		//hookX = x + width/2.0;
 		hookX = x;
 		hookY = y+height/2.0;
 	}
