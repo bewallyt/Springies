@@ -1,5 +1,8 @@
 package springies;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import jboxGlue.PhysicalObject;
 import jboxGlue.PhysicalObjectCircle;
 import jboxGlue.PhysicalObjectRect;
@@ -7,7 +10,11 @@ import jboxGlue.WorldManager;
 import jgame.JGColor;
 import jgame.JGObject;
 import jgame.platform.JGEngine;
+
 import org.jbox2d.common.Vec2;
+
+import simulation.Mass;
+import simulation.XMLParser;
 
 
 @SuppressWarnings("serial")
@@ -81,9 +88,13 @@ public class Springies extends JGEngine
 	 */
     
     public void createModels(){
-    	
-    	
-    	
+    	XMLParser importObject = new XMLParser();
+    	importObject.readXMLObject("assets/ball.xml");
+//    	HashMap<String, ArrayList<Double>> massMap = new HashMap<String, ArrayList<Double>>();
+//    	massMap = importObject.getMassMap();
+//    	Mass mass1 = new Mass();
+
+
     }
     
     
