@@ -4,6 +4,7 @@ import org.jbox2d.common.Vec2;
 
 import jboxGlue.PhysicalObjectRect;
 import jgame.JGColor;
+import jgame.JGObject;
 
 
 public class Mass extends PhysicalObjectRect{
@@ -26,8 +27,14 @@ public class Mass extends PhysicalObjectRect{
 		this.x = xCoord;
 		this.y = yCoord;
 		
+		float xvel = (float) xv;
+		float yvel = (float) yv;
+		Vec2 velocity = new Vec2(xvel,yvel);
+		this.myBody.setLinearVelocity(velocity);
+		/**
 		this.xspeed = xv;
 		this.yspeed = yv;
+		*/
 		
 		//Should mass hooks be at the center of the mass?
 		//hookX = x + width/2.0;
@@ -44,20 +51,31 @@ public class Mass extends PhysicalObjectRect{
 	
 	public void move()	{
 		
+		//Move object with mouse when mouse is pressed in bounds of object
 		if(myEngine.getMouseButton(1) && (myEngine.getMouseX() >= x-massWidth*2 && 
 				myEngine.getMouseX() <= x+massWidth*2) && 
 				(myEngine.getMouseY() >= y-massHeight*2 &&
 				myEngine.getMouseY() <= y+massHeight*2))	{
-			x = myEngine.getMouseX()-massWidth/2;
-			y = myEngine.getMouseY()-massHeight/2;
-			xspeed = (x-prevmousex)/10.0;
-			yspeed = (y-prevmousey)/10.0;
-			prevmousex = myEngine.getMouseX();
-			prevmousey = myEngine.getMouseY();
+			mouseMove();
+		}
+		else	{
+			
 		}
 	}
-	
-	
+
+	public void mouseMove()	{
+		x = myEngine.getMouseX()-massWidth/2;
+		y = myEngine.getMouseY()-massHeight/2;
+		float xvel = (float) ((x-prevmousex)/10.0);
+		float yvel = (float) ((y-prevmousey)/10.0);
+		Vec2 velocity = new Vec2(xvel,yvel);
+		/**
+		xspeed = (x-prevmousex)/10.0;
+		yspeed = (y-prevmousey)/10.0;
+		*/
+		prevmousex = myEngine.getMouseX();
+		prevmousey = myEngine.getMouseY();
+	}
 	
 }
 	
