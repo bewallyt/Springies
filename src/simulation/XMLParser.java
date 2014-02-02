@@ -3,6 +3,7 @@ package simulation;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -97,7 +98,7 @@ public class XMLParser {
 
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						Element element = (Element) node;
-
+//
 //						System.out.println("id: " + element.getAttribute("id"));
 //						System.out.println("x: " + element.getAttribute("x"));
 //						System.out.println("y: " + element.getAttribute("y"));
@@ -198,8 +199,8 @@ public class XMLParser {
 
 					}
 					
-					massCounter ++;
-					System.out.println(massCounter);
+//					massCounter ++;
+//					System.out.println(massCounter);
 
 				}
 			}
@@ -341,5 +342,10 @@ public class XMLParser {
 		}
 
 	}
+	
+//    public static void main (String args[])
+//    {
+//
+//    }
 
 }
