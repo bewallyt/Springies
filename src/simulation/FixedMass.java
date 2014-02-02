@@ -8,5 +8,7 @@ public class FixedMass extends Mass {
 		x = xCoord;
 		y = yCoord;
 	}
+	
+	public void move(){}
 
 }
