@@ -28,11 +28,7 @@ public class Main
      */
     public static void main (String args[])
     {
-    	
-//    	XMLParser test = new XMLParser();
-//    	test.readXML("assets/daintywalker.xml", "mass");
-//    	test.readXML("assets/daintywalker.xml", "spring");
-//    	test.readXML("assets/daintywalker.xml", "muscle");
+
 
         // view of user's content
         final Springies sp = new Springies();
@@ -40,8 +36,10 @@ public class Main
         jb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed (ActionEvent arg0) {
-              // sp.addBall();
-                sp.createModels();
+               sp.addBall();
+               // sp.createMasses();
+               // sp.createSprings();
+
             }
         });
         // container that will work with user's OS

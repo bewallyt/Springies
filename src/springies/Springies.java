@@ -15,11 +15,24 @@ import jgame.platform.JGEngine;
 
 import org.jbox2d.common.Vec2;
 
+import simulation.FixedMass;
 import simulation.Mass;
+import simulation.Spring;
 import simulation.XMLParser;
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
+	
+	private static HashMap<String, Mass> Masses = new HashMap<String, Mass>();
+	
+	public static HashMap<String, Mass> getMasses() {
+		return Masses;
+	}
+
+	public void setMasses(HashMap<String, Mass> masses) {
+		Masses = masses;
+	}
+
 	public Springies() {
 		// set the window size
 		int height = 480;
@@ -49,8 +62,9 @@ public class Springies extends JGEngine {
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
 		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
-		//addBall();
-		createModels();
+		addBall();
+		createMasses();
+		createSprings();
 		addWalls();
 	}
 
@@ -58,25 +72,27 @@ public class Springies extends JGEngine {
 		// add a bouncy ball
 		// NOTE: you could make this into a separate class, but I'm lazy
 		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,
-				10, 5) {
-			@Override
-			public void hit(JGObject other) {
-				// we hit something! bounce off it!
-				Vec2 velocity = myBody.getLinearVelocity();
-				// is it a tall wall?
-				final double DAMPING_FACTOR = 0.8;
-				boolean isSide = other.getBBox().height > other.getBBox().width;
-				if (isSide) {
-					velocity.x *= -DAMPING_FACTOR;
-				} else {
-					velocity.y *= -DAMPING_FACTOR;
-				}
-				// apply the change
-				myBody.setLinearVelocity(velocity);
-			}
+				10, 5); 
+		
+		{
+//			@Override
+//			public void hit(JGObject other) {
+//				// we hit something! bounce off it!
+//				Vec2 velocity = myBody.getLinearVelocity();
+//				// is it a tall wall?
+//				final double DAMPING_FACTOR = 0.8;
+//				boolean isSide = other.getBBox().height > other.getBBox().width;
+//				if (isSide) {
+//					velocity.x *= -DAMPING_FACTOR;
+//				} else {
+//					velocity.y *= -DAMPING_FACTOR;
+//				}
+//				// apply the change
+//				myBody.setLinearVelocity(velocity);
+//			}
 		};
 		ball.setPos(displayWidth() / 2, displayHeight() / 2);
-		ball.setForce(8000, -10000);
+		//ball.setForce(8000, -10000);
 
 		PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
 				0.45419145);
@@ -87,28 +103,64 @@ public class Springies extends JGEngine {
 	 * Instantiate objects from XML files below.
 	 */
 
-	public void createModels() {
+	public void createMasses() {
 		XMLParser importObject = new XMLParser();
 		importObject.readXMLObject("ball.xml");
-		HashMap<String, ArrayList<Double>> massMap = new HashMap<String, ArrayList<Double>>();
-		massMap = importObject.getMassMap();
-		// Mass mass1 = new Mass();
-
-		ArrayList<Mass> Masses = new ArrayList<Mass>();
+		HashMap<String, ArrayList<Double>> massMap = new HashMap<String, ArrayList<Double>>(
+				importObject.getMassMap());
 
 		for (Entry<String, ArrayList<Double>> entry : massMap.entrySet()) {
 			String key = entry.getKey();
 			ArrayList<Double> value = entry.getValue();
-			//System.out.println(key);
-			Masses.add(new Mass(key, 15, 15, value.get(0), value.get(1), 50,
-				value.get(2), value.get(3)));
 
+			Mass tempMass = new Mass(key, 15, 15, value.get(0), value.get(1), 50,
+					value.get(2), value.get(3));
+			
+			Masses.put(key, tempMass);
+			
+		}
+		
+		
+	}
+
+	public void createFixedMasses() {
+		XMLParser importObject = new XMLParser();
+		importObject.readXMLObject("ball.xml");
+		HashMap<String, ArrayList<Double>> fixedMassMap = new HashMap<String, ArrayList<Double>>(
+				importObject.getFixedMap());
+
+		HashMap<String, FixedMass> fixedMasses = new HashMap<String, FixedMass>();
+
+		for (Entry<String, ArrayList<Double>> entry : fixedMassMap.entrySet()) {
+			String key = entry.getKey();
+			ArrayList<Double> value = entry.getValue();
+			// System.out.println(key);
+			fixedMasses.put(key, new FixedMass(key, value.get(0), value.get(1)));
+			
 			for (int i = 0; i < value.size(); i++) {
 				double attr = value.get(i);
 				System.out.print(attr + " ");
 			}
-			System.out.println();
 		}
+	}
+
+	public void createSprings() {
+		XMLParser importObject = new XMLParser();
+		importObject.readXMLObject("ball.xml");
+		ArrayList<ArrayList<Object>> tempSprings = new ArrayList<ArrayList<Object>>(
+				importObject.getSpringList());
+		// Mass mass1 = new Mass();
+
+		ArrayList<Spring> Springs = new ArrayList<Spring>();
+
+		for (int i = 0; i < tempSprings.size(); i++) {
+			Springs.add(new Spring((String) tempSprings.get(i).get(0),
+					(String) tempSprings.get(i).get(1), (Double) tempSprings
+							.get(i).get(2), (Double) tempSprings.get(i).get(3)));
+			
+		}
+		
+
 	}
 
 	private void addWalls() {
