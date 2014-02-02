@@ -9,7 +9,7 @@ import jgame.JGObject;
 import jgame.platform.JGEngine;
 import org.jbox2d.common.Vec2;
 
-import simulation.Mass;
+import simulation.*;
 
 
 @SuppressWarnings("serial")
@@ -77,8 +77,10 @@ public class Springies extends JGEngine
         ball.setPos(displayWidth() / 2, displayHeight() / 2);
         ball.setForce(8000, -10000);
         
-        PhysicalObject obj1 = new Mass("m1",10,10,100,100,1,0.8951623,0.45419145);
+        Mass obj1 = new Mass("m1",10,10,100,100,1,0.8951623,0.45419145);
         obj1.setForce(8000,-10000);
+        Mass obj2 = new Mass("m2",10,10,150,150,1,.3,.3);
+        PhysicalObject obj3 = new Spring(obj1,obj2,1.0,1.0);
     }
     
 	/**

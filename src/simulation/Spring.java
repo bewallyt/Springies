@@ -13,7 +13,7 @@ public class Spring extends PhysicalObject{
 	private double mySpringyness;
 	
 	/*Spring constructor with springyness*/
-	protected Spring(Mass m1, Mass m2, double restL,
+	public Spring(Mass m1, Mass m2, double restL,
 			double K) {
 		super("spring", 0, JGColor.blue);
 		myMass1 = m1;
@@ -28,7 +28,7 @@ public class Spring extends PhysicalObject{
 	}
 	
 	/*Spring constructor without springyness*/
-	protected Spring(Mass m1, Mass m2, double restL) {
+	public Spring(Mass m1, Mass m2, double restL) {
 		super("spring", 0, JGColor.blue);
 		myMass1 = m1;
 		myMass2 = m2;
@@ -37,6 +37,7 @@ public class Spring extends PhysicalObject{
 	}
 	
 	public void move()	{
+		/**
 		double width = Math.abs(x1-x2);
 		double height = Math.abs(y1-y2);
 		double xCorner = Math.min(x1, x2);
@@ -48,6 +49,16 @@ public class Spring extends PhysicalObject{
 			x = myEngine.getMouseX();
 			y = myEngine.getMouseY();
 		}
+		paintShape();
+		*/
+		x1 = myMass1.hookX;
+		y1 = myMass1.hookY;
+		x2 = myMass2.hookX;
+		y2 = myMass2.hookY;
+		myEngine.drawLine(x1, y1, 
+				x2, y2);
+		myEngine.setColor(myColor);
+		
 	}
 	
 	@Override
