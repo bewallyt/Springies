@@ -35,19 +35,6 @@ public class Spring extends PhysicalObject {
 	}
 
 	public void springForce() {
-		/**
-		double dx=myMass2.x-myMass1.x;
-		double dy=myMass2.y-myMass1.y;
-		double distance=Math.sqrt((dx*dx) + (dy*dy));
-		double disp=distance-myRestLength;
-		System.out.println(disp);
-		double unitx=dx/distance;
-		double unity=dy/distance;
-		
-		
-		myMass1.setForce(constant*disp*unitx*Springies.myViscosity, constant*disp*unity*Springies.myViscosity);
-		myMass2.setForce(-constant*disp*unitx*Springies.myViscosity, -constant*disp*unity*Springies.myViscosity);
-		*/
 		double dx = myMass2.getMassX() - myMass1.getMassX();
 		double dy = myMass2.getMassY() - myMass1.getMassY();
 		double dist = Math.sqrt(Math.pow(
