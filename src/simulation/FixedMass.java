@@ -9,7 +9,6 @@ public class FixedMass extends Mass {
 		// Changed x and y to this.x and this.y
 		this.x = xCoord;
 		this.y = yCoord;
-
 	}
 	
 	public void move(){}

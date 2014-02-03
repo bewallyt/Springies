@@ -17,12 +17,6 @@ public class Mass extends PhysicalObjectRect {
 
 	
 
-	@Override
-	public Body getMyBody() {
-		// TODO Auto-generated method stub
-		return super.getMyBody();
-	}
-
 	/* Constructor */
 	public Mass(String id, double width, double height, double xCoord,
 			double yCoord, double mass, double xv, double yv) {
@@ -33,7 +27,6 @@ public class Mass extends PhysicalObjectRect {
 
 		this.x = xCoord;
 		this.y = yCoord;
-
 		this.xspeed = xv;
 		this.yspeed = yv;
 
@@ -45,6 +38,7 @@ public class Mass extends PhysicalObjectRect {
 	public double getMassY(){
 		return this.y;
 	}
+
 
 
 	//int prevmousex = 0, prevmousey = 0;

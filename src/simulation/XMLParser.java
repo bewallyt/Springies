@@ -192,7 +192,7 @@ public class XMLParser {
 						} else {
 //							System.out.println("constant: "
 //									+ element.getAttribute("constant"));
-							nestedSpringList.add(Double.parseDouble(element.getAttribute("restlength")));
+							nestedSpringList.add(Double.parseDouble(element.getAttribute("constant")));
 						}
 						
 						springList.add(nestedSpringList);

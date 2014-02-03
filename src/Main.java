@@ -37,6 +37,8 @@ public class Main
             @Override
             public void actionPerformed (ActionEvent arg0) {
                //sp.addBall();
+               // sp.createMasses();
+
                 sp.createMasses();
                // sp.createSprings();
             }
