@@ -83,6 +83,7 @@ public class Mass extends PhysicalObjectRect {
 	private void initViscosity(){
 	myBody.setLinearVelocity(Viscosity.setViscosity(this, 0.8));
 	}
+	
 
 
     

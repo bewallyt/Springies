@@ -92,6 +92,9 @@ public class Springies extends JGEngine {
 		}
 		;
 		ball.setPos(displayWidth() / 2, displayHeight() / 2);
+		System.out.println("displayWidth/2: " + displayWidth()/2);
+		System.out.println("displayHeight/2: " + displayHeight() / 2);
+		
 		// ball.setForce(8000, -10000);
 		/**
 		 * PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
