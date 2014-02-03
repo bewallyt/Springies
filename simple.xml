@@ -1,0 +1,11 @@
+<model>
+	<name>Test File</name>
+	<author>Jeff Day</author>
+	<nodes>
+		<mass id="m0" x="100" y="100" mass="1"/>
+        <mass id="m1" x="300" y="100" mass="1"/>
+	</nodes>
+	<links>
+		<spring a="m1" b="m0" restlength="10.0" constant="0.1"/>
+	</links>
+</model>
