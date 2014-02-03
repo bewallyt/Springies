@@ -93,15 +93,6 @@ public class Springies extends JGEngine {
 		;
 		ball.setPos(displayWidth() / 2, displayHeight() / 2);
 		// ball.setForce(8000, -10000);
-		/**
-		 * PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
-		 * 0.45419145); obj1.setForce(8000, -10000);
-		 */
-
-
-		PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
-				0.45419145);
-		obj1.setForce(8000, -10000);
 
 	}
 
@@ -111,7 +102,7 @@ public class Springies extends JGEngine {
 
 	public void createMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("simple.xml");
+		importObject.readXMLObject("ball.xml");
 
 		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getMassMap());
@@ -120,7 +111,7 @@ public class Springies extends JGEngine {
 			String key = entry.getKey();
 			ArrayList<Double> value = entry.getValue();
 
-			Mass tempMass = new Mass(key, 15, 15, value.get(0), value.get(1),
+			Mass tempMass = new Mass(key, 5, value.get(0), value.get(1),
 					50, value.get(2), value.get(3));
 
 			tempMass.setPos(value.get(0), value.get(1));
@@ -133,7 +124,7 @@ public class Springies extends JGEngine {
 
 	public void createFixedMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("simple.xml");
+		importObject.readXMLObject("ball.xml");
 		HashMap<String, ArrayList<Double>> fixedMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getFixedMap());
 
@@ -157,7 +148,7 @@ public class Springies extends JGEngine {
 
 	public void createSprings() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("simple.xml");
+		importObject.readXMLObject("ball.xml");
 		ArrayList<ArrayList<Object>> tempSprings = new ArrayList<ArrayList<Object>>(
 				importObject.getSpringList());
 		// Mass mass1 = new Mass();
