@@ -1,6 +1,7 @@
 package simulation;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
@@ -13,6 +14,14 @@ public class Mass extends PhysicalObjectRect {
 
 	/* Object Dimensions. */
 	private double massHeight, massWidth;
+
+	
+
+	@Override
+	public Body getMyBody() {
+		// TODO Auto-generated method stub
+		return super.getMyBody();
+	}
 
 	/* Constructor */
 	public Mass(String id, double width, double height, double xCoord,
@@ -68,5 +77,14 @@ public class Mass extends PhysicalObjectRect {
         this.y = position.y;
         myRotation = -myBody.getAngle();
     }
+
+	public Vec2 getVelocity() {
+		Vec2 velocity = myBody.getLinearVelocity();
+		return velocity;
+	}
+    
+    
+    
+    
 
 }

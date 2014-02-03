@@ -16,8 +16,14 @@ public abstract class PhysicalObject extends JGObject
     protected JGColor myColor;
     protected Body myBody;
     protected float myRotation;
+    
+    
 
-    protected PhysicalObject (String name, int collisionId, JGColor color)
+    public Body getMyBody() {
+		return myBody;
+	}
+
+	protected PhysicalObject (String name, int collisionId, JGColor color)
     {
         super(name, true, 0, 0, collisionId, null);
         init(color, false);
