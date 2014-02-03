@@ -3,28 +3,28 @@ import forces.Viscosity;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 
+import jboxGlue.PhysicalObjectCircle;
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
 
 
-public class Mass extends PhysicalObjectRect {
+public class Mass extends PhysicalObjectCircle {
 
 	/* Hooks onto Spring. */
 	protected double hookX, hookY;
 
 	/* Object Dimensions. */
-	private double massHeight, massWidth;
+	private double massRadius;
 
 	
 
 	/* Constructor */
-	public Mass(String id, double width, double height, double xCoord,
+	public Mass(String id, double radius, double xCoord,
 			double yCoord, double mass, double xv, double yv) {
-		super(id, 0, JGColor.blue, width, height, mass);
+		super(id, 0, JGColor.blue, radius, mass);
 
-		massHeight = height;
-		massWidth = width;
+		massRadius = radius;
 
 		this.x = xCoord;
 		this.y = yCoord;

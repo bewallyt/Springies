@@ -61,7 +61,7 @@ public class Springies extends JGEngine {
 		// so gravity is up in world coords and down in game coords
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
-		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
+		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.05f));
 		addBall();
 		createMasses();
 		createSprings();
@@ -96,15 +96,6 @@ public class Springies extends JGEngine {
 		System.out.println("displayHeight/2: " + displayHeight() / 2);
 		
 		// ball.setForce(8000, -10000);
-		/**
-		 * PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
-		 * 0.45419145); obj1.setForce(8000, -10000);
-		 */
-
-
-		PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
-				0.45419145);
-		obj1.setForce(8000, -10000);
 
 	}
 
@@ -122,8 +113,7 @@ public class Springies extends JGEngine {
 		for (Entry<String, ArrayList<Double>> entry : importMassMap.entrySet()) {
 			String key = entry.getKey();
 			ArrayList<Double> value = entry.getValue();
-
-			Mass tempMass = new Mass(key, 15, 15, value.get(0), value.get(1),
+			Mass tempMass = new Mass(key, 5, value.get(0), value.get(1),
 					50, value.get(2), value.get(3));
 
 			tempMass.setPos(value.get(0), value.get(1));
