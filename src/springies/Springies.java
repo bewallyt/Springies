@@ -94,17 +94,16 @@ public class Springies extends JGEngine {
 		;
 		ball.setPos(displayWidth() / 2, displayHeight() / 2);
 		// ball.setForce(8000, -10000);
-<<<<<<< HEAD
 		/**
 		 * PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
 		 * 0.45419145); obj1.setForce(8000, -10000);
 		 */
-=======
+
 
 		PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
 				0.45419145);
 		obj1.setForce(8000, -10000);
->>>>>>> 4b96fb4a6df493205d4241524869c030e41d0c92
+
 	}
 
 	/**
@@ -113,13 +112,9 @@ public class Springies extends JGEngine {
 
 	public void createMasses() {
 		XMLParser importObject = new XMLParser();
-<<<<<<< HEAD
 		importObject.readXMLObject("simple.xml");
-		HashMap<String, ArrayList<Double>> massMap = new HashMap<String, ArrayList<Double>>(
-=======
-		importObject.readXMLObject("ball.xml");
+
 		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
->>>>>>> 4b96fb4a6df493205d4241524869c030e41d0c92
 				importObject.getMassMap());
 
 		for (Entry<String, ArrayList<Double>> entry : importMassMap.entrySet()) {
@@ -168,30 +163,15 @@ public class Springies extends JGEngine {
 				importObject.getSpringList());
 		// Mass mass1 = new Mass();
 
-<<<<<<< HEAD
-//		ArrayList<Spring> Springs = new ArrayList<Spring>();
-		
-
-		for (int i = 0; i < tempSprings.size(); i++) {
-			
-			Spring tempSpring = new Spring((String) tempSprings.get(i).get(0),
-					(String) tempSprings.get(i).get(1), (Double) tempSprings
-					.get(i).get(2), (Double) tempSprings.get(i).get(3));
-					
-			Springs.add(tempSpring);
-			
-//			tempSpring.springForce();
-			
-=======
 		// ArrayList<Spring> Springs = new ArrayList<Spring>();
 
 		for (int i = 0; i < tempSprings.size(); i++) {
-			Spring currentSpring = new Spring((String) tempSprings.get(i)
-					.get(0), (String) tempSprings.get(i).get(1),
-					(Double) tempSprings.get(i).get(2), (Double) tempSprings
-							.get(i).get(3));
 
->>>>>>> 4b96fb4a6df493205d4241524869c030e41d0c92
+			Spring tempSpring = new Spring((String) tempSprings.get(i).get(0),
+					(String) tempSprings.get(i).get(1), (Double) tempSprings
+							.get(i).get(2), (Double) tempSprings.get(i).get(3));
+
+			Springs.add(tempSpring);
 		}
 
 	}
@@ -226,16 +206,15 @@ public class Springies extends JGEngine {
 		// createSprings();
 		moveObjects();
 		checkCollision(1 + 2, 1);
-<<<<<<< HEAD
+
 //		for (Spring s : Springs) {
 //			s.springForce();
 //
 //		}
-=======
+
 		for (Spring s : Springs) {
 
 		}
->>>>>>> 4b96fb4a6df493205d4241524869c030e41d0c92
 
 	}
 

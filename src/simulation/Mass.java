@@ -37,13 +37,6 @@ public class Mass extends PhysicalObjectRect {
 	}
 
 
-	public double getMassX(){
-		return this.x;
-	}
-	public double getMassY(){
-		return this.y;
-	}
-
 
 	//int prevmousex = 0, prevmousey = 0;
 
