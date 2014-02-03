@@ -22,9 +22,9 @@ import simulation.XMLParser;
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
-	
-	private static HashMap<String, Mass> Masses = new HashMap<String, Mass>();
-	
+
+	public static HashMap<String, Mass> Masses = new HashMap<String, Mass>();
+
 	public static HashMap<String, Mass> getMasses() {
 		return Masses;
 	}
@@ -72,27 +72,28 @@ public class Springies extends JGEngine {
 		// add a bouncy ball
 		// NOTE: you could make this into a separate class, but I'm lazy
 		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,
-				10, 5); 
-		
+				10, 5);
+
 		{
-//			@Override
-//			public void hit(JGObject other) {
-//				// we hit something! bounce off it!
-//				Vec2 velocity = myBody.getLinearVelocity();
-//				// is it a tall wall?
-//				final double DAMPING_FACTOR = 0.8;
-//				boolean isSide = other.getBBox().height > other.getBBox().width;
-//				if (isSide) {
-//					velocity.x *= -DAMPING_FACTOR;
-//				} else {
-//					velocity.y *= -DAMPING_FACTOR;
-//				}
-//				// apply the change
-//				myBody.setLinearVelocity(velocity);
-//			}
-		};
+			// @Override
+			// public void hit(JGObject other) {
+			// // we hit something! bounce off it!
+			// Vec2 velocity = myBody.getLinearVelocity();
+			// // is it a tall wall?
+			// final double DAMPING_FACTOR = 0.8;
+			// boolean isSide = other.getBBox().height > other.getBBox().width;
+			// if (isSide) {
+			// velocity.x *= -DAMPING_FACTOR;
+			// } else {
+			// velocity.y *= -DAMPING_FACTOR;
+			// }
+			// // apply the change
+			// myBody.setLinearVelocity(velocity);
+			// }
+		}
+		;
 		ball.setPos(displayWidth() / 2, displayHeight() / 2);
-		//ball.setForce(8000, -10000);
+		// ball.setForce(8000, -10000);
 
 		PhysicalObject obj1 = new Mass("m1", 10, 10, 100, 100, 1, 0.8951623,
 				0.45419145);
@@ -106,23 +107,22 @@ public class Springies extends JGEngine {
 	public void createMasses() {
 		XMLParser importObject = new XMLParser();
 		importObject.readXMLObject("ball.xml");
-		HashMap<String, ArrayList<Double>> massMap = new HashMap<String, ArrayList<Double>>(
+		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getMassMap());
 
-		for (Entry<String, ArrayList<Double>> entry : massMap.entrySet()) {
+		for (Entry<String, ArrayList<Double>> entry : importMassMap.entrySet()) {
 			String key = entry.getKey();
 			ArrayList<Double> value = entry.getValue();
 
-			Mass tempMass = new Mass(key, 15, 15, value.get(0), value.get(1), 50,
-					value.get(2), value.get(3));
-			
+			Mass tempMass = new Mass(key, 15, 15, value.get(0), value.get(1),
+					50, value.get(2), value.get(3));
+
 			tempMass.setPos(value.get(0), value.get(1));
-			
+
 			Masses.put(key, tempMass);
-			
+
 		}
-		
-		
+
 	}
 
 	public void createFixedMasses() {
@@ -137,15 +137,16 @@ public class Springies extends JGEngine {
 			String key = entry.getKey();
 			ArrayList<Double> value = entry.getValue();
 			// System.out.println(key);
-			fixedMasses.put(key, new FixedMass(key, value.get(0), value.get(1)));
-			
+			fixedMasses
+					.put(key, new FixedMass(key, value.get(0), value.get(1)));
+
 			for (int i = 0; i < value.size(); i++) {
 				double attr = value.get(i);
 				System.out.print(attr + " ");
 			}
 		}
 	}
-	
+
 	ArrayList<Spring> Springs = new ArrayList<Spring>();
 
 	public void createSprings() {
@@ -155,15 +156,15 @@ public class Springies extends JGEngine {
 				importObject.getSpringList());
 		// Mass mass1 = new Mass();
 
-//		ArrayList<Spring> Springs = new ArrayList<Spring>();
+		// ArrayList<Spring> Springs = new ArrayList<Spring>();
 
 		for (int i = 0; i < tempSprings.size(); i++) {
-			Springs.add(new Spring((String) tempSprings.get(i).get(0),
-					(String) tempSprings.get(i).get(1), (Double) tempSprings
-							.get(i).get(2), (Double) tempSprings.get(i).get(3)));
-			
+			Spring currentSpring = new Spring((String) tempSprings.get(i)
+					.get(0), (String) tempSprings.get(i).get(1),
+					(Double) tempSprings.get(i).get(2), (Double) tempSprings
+							.get(i).get(3));
+
 		}
-		
 
 	}
 
@@ -194,13 +195,13 @@ public class Springies extends JGEngine {
 	public void doFrame() {
 		// update game objects
 		WorldManager.getWorld().step(1f, 1);
-//		createSprings();
+		// createSprings();
 		moveObjects();
 		checkCollision(1 + 2, 1);
-		for(Spring s : Springs){
-			
+		for (Spring s : Springs) {
+
 		}
-	
+
 	}
 
 	@Override

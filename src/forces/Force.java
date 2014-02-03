@@ -21,7 +21,6 @@ public abstract class Force {
 
     public Force () {
         myProperties = new HashMap<String, Double>();
-        myToggled = false;
         myDefaultVector = new Vector();
     }
 
@@ -62,19 +61,6 @@ public abstract class Force {
         return myName;
     }
 
-    /**
-     * Sets the toggled state of the force.
-     */
-    public void setToggle (boolean toggle) {
-        myToggled = toggle;
-    }
-
-    /**
-     * Returns the toggled state of the force.
-     */
-    public boolean getToggle () {
-        return myToggled;
-    }
 
     /**
      * Sets the default vector for the force.
