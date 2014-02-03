@@ -42,7 +42,6 @@ public class Muscle extends Spring	{
 		double dy = myMass2.getMassY() - myMass1.getMassY();
 		double dist = Math.sqrt(Math.pow(
 				dx, 2) + Math.pow(dy, 2));
-		//System.out.println("dist: " + dist);
 		double sinForce = Math.sin(radian) * 250 * myAmplitude;
 		double magnitude = (mySpringyness * (dist - myRestLength) * 70)+sinForce;
 		double xComp = dx / dist * magnitude;
