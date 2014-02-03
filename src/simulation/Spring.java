@@ -39,7 +39,7 @@ public class Spring extends PhysicalObject {
 		double dy = myMass2.getMassY() - myMass1.getMassY();
 		double dist = Math.sqrt(Math.pow(
 				dx, 2) + Math.pow(dy, 2));
-		System.out.println("dist: " + dist);
+		//System.out.println("dist: " + dist);
 		double magnitude = mySpringyness * (dist - myRestLength) * 75000;
 		//double angle = Math.atan(dy / dx);
 		double xComp = dx / dist * magnitude; //Math.cos(angle) * magnitude;

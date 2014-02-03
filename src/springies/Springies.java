@@ -15,6 +15,7 @@ import jgame.platform.JGEngine;
 
 import org.jbox2d.common.Vec2;
 
+import forces.CenterOfMass;
 import simulation.FixedMass;
 import simulation.Mass;
 import simulation.Spring;
@@ -102,6 +103,9 @@ public class Springies extends JGEngine {
 	/**
 	 * Instantiate objects from XML files below.
 	 */
+	
+	// Horrible code...but needed for Center Of Mass now.
+	ArrayList<Mass> massesCenter = new ArrayList<Mass>();
 
 	public void createMasses() {
 		XMLParser importObject = new XMLParser();
@@ -109,6 +113,7 @@ public class Springies extends JGEngine {
 
 		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getMassMap());
+		
 
 		for (Entry<String, ArrayList<Double>> entry : importMassMap.entrySet()) {
 			String key = entry.getKey();
@@ -119,9 +124,17 @@ public class Springies extends JGEngine {
 			tempMass.setPos(value.get(0), value.get(1));
 
 			Masses.put(key, tempMass);
+			massesCenter.add(tempMass);
 
 		}
+		
 
+	}
+	
+	public double[] applyCenterForce(ArrayList<Mass> massesCenter){
+		
+		return CenterOfMass.centerForce(massesCenter);
+		
 	}
 
 	public void createFixedMasses() {
@@ -199,14 +212,12 @@ public class Springies extends JGEngine {
 		moveObjects();
 		checkCollision(1 + 2, 1);
 
-//		for (Spring s : Springs) {
-//			s.springForce();
-//
-//		}
-
-		for (Spring s : Springs) {
+		for (Mass m : massesCenter) {
+			m.setForce(applyCenterForce(massesCenter)[0],applyCenterForce(massesCenter)[1]);
 
 		}
+
+		
 
 	}
 

@@ -8,19 +8,9 @@ import simulation.Mass;
 
 public class CenterOfMass {
 
-	private double xCenter;
-	private double yCenter;
-	private static ArrayList<Mass> myMasses = new ArrayList<Mass>();
-
-	public CenterOfMass(ArrayList<Mass> masses) {
-		xCenter = 426;
-		yCenter = 240;
-		myMasses = masses;
-
-	}
-
-	public static Vec2 centerForce() {
-
+	public static double[] centerForce(ArrayList<Mass> masses) {
+		
+		double[] vector;
 		ArrayList<Double> allX = new ArrayList<Double>();
 		ArrayList<Double> allY = new ArrayList<Double>();
 		double sumX = 0;
@@ -28,12 +18,12 @@ public class CenterOfMass {
 		double avgX = 0;
 		double avgY = 0;
 		double dist = 0;
-		int max = myMasses.size();
+		int max = masses.size();
 
 		for (int i = 0; i < max; i++) {
 
-			allX.add(myMasses.get(i).getMassX());
-			allY.add(myMasses.get(i).getMassY());
+			allX.add(masses.get(i).getMassX());
+			allY.add(masses.get(i).getMassY());
 
 		}
 
@@ -50,25 +40,24 @@ public class CenterOfMass {
 		dist = Math.sqrt(Math.pow(avgX - 426, 2) + Math.pow(avgX - 240, 2));
 
 		double angle = Math.atan((avgX - 426) / (avgX - 240));
-		double xComp = Math.cos(angle) * dist * 100;
-		double yComp = Math.sin(angle) * dist * 100;
-		
-		Vec2 vec;
+		double xComp = Math.cos(angle) * dist * 20;
+		double yComp = Math.sin(angle) * dist * 20;
+	
 
 		if (((avgX - 426) > 0) && ((avgY - 240) > 0)) {
-			vec = new Vec2((float) -xComp, (float) -yComp);
+			vector = new double[] {-xComp,  -yComp};
 		}
 		else if (((avgX - 426) < 0) && ((avgY - 240) > 0)) {
-			vec = new Vec2((float) xComp, (float) -yComp);
+			vector = new double[] {xComp, -yComp};
 		}
 		else if (((avgX - 426) > 0) && ((avgY - 240) < 0)) {
-			vec = new Vec2((float) -xComp, (float) yComp);
+			vector = new double[] {-xComp, yComp};
 		}
 		else{
-			vec = new Vec2((float) xComp, (float) yComp);
+			vector = new double[] {xComp, yComp};
 		}
 
-		return vec;
+		return vector;
 
 	}
 
