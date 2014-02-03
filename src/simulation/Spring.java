@@ -27,7 +27,7 @@ public class Spring extends PhysicalObject {
 	}
 
 	public void move() {
-		springForce();
+
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class Spring extends PhysicalObject {
 		
 		System.out.println("Mass " + myMass1 +  " x: " + xComp);
 		System.out.println("Mass " + myMass1 +  " y: " + yComp);
-		
+
 	}
 
 }
