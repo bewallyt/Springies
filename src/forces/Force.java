@@ -6,17 +6,10 @@ import java.util.HashMap;
 import java.util.Vector;
 
 
-/**
- * A bean class that holds properties of forces.
- * 
- * @author james
- * 
- */
 public abstract class Force {
 
     private HashMap<String, Double> myProperties;
     private String myName;
-    private boolean myToggled;
     private Vector myDefaultVector;
 
     public Force () {
@@ -89,13 +82,6 @@ public abstract class Force {
         return myName.equals(other.getName());
     }
 
-    /**
-     * Overwrites hashcode such that forces with the same name have the same hashcode.
-     */
-    @Override
-    public int hashCode () {
-        return myName.hashCode();
-    }
 
     /**
      * Returns a string representation of this force.

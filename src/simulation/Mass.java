@@ -1,10 +1,12 @@
 package simulation;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
+import jgame.JGObject;
 
 public class Mass extends PhysicalObjectRect {
 
@@ -13,6 +15,8 @@ public class Mass extends PhysicalObjectRect {
 
 	/* Object Dimensions. */
 	private double massHeight, massWidth;
+
+	
 
 	/* Constructor */
 	public Mass(String id, double width, double height, double xCoord,
@@ -68,5 +72,14 @@ public class Mass extends PhysicalObjectRect {
         this.y = position.y;
         myRotation = -myBody.getAngle();
     }
+
+	public Vec2 getVelocity() {
+		Vec2 velocity = myBody.getLinearVelocity();
+		return velocity;
+	}
+    
+    
+    
+    
 
 }

@@ -93,4 +93,6 @@ public class PhysicalObjectRect extends PhysicalObject
         myPolyy[3] = (int) (y + halfWidth * sin + halfHeight * cos);
         myEngine.drawPolygon(myPolyx, myPolyy, null, 4, true, true);
     }
+    
+    
 }
