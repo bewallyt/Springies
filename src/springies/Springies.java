@@ -111,7 +111,7 @@ public class Springies extends JGEngine {
 
 	public void createMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("simple.xml");
+		importObject.readXMLObject("ball.xml");
 
 		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getMassMap());
@@ -133,7 +133,7 @@ public class Springies extends JGEngine {
 
 	public void createFixedMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("simple.xml");
+		importObject.readXMLObject("ball.xml");
 		HashMap<String, ArrayList<Double>> fixedMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getFixedMap());
 
@@ -157,7 +157,7 @@ public class Springies extends JGEngine {
 
 	public void createSprings() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("simple.xml");
+		importObject.readXMLObject("ball.xml");
 		ArrayList<ArrayList<Object>> tempSprings = new ArrayList<ArrayList<Object>>(
 				importObject.getSpringList());
 		// Mass mass1 = new Mass();

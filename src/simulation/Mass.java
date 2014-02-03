@@ -1,12 +1,12 @@
 package simulation;
-
+import forces.Viscosity;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
-import jgame.JGObject;
+
 
 public class Mass extends PhysicalObjectRect {
 
@@ -71,12 +71,20 @@ public class Mass extends PhysicalObjectRect {
         this.x = position.x;
         this.y = position.y;
         myRotation = -myBody.getAngle();
+        
+        initViscosity();
     }
 
 	public Vec2 getVelocity() {
 		Vec2 velocity = myBody.getLinearVelocity();
 		return velocity;
 	}
+	
+	private void initViscosity(){
+	myBody.setLinearVelocity(Viscosity.setViscosity(this, 0.8));
+	}
+
+
     
     
     
