@@ -71,8 +71,7 @@ public class Springies extends JGEngine {
 	public void addBall() {
 		// add a bouncy ball
 		// NOTE: you could make this into a separate class, but I'm lazy
-		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,
-				10, 5);
+		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,10, 5);
 
 		{
 			// @Override

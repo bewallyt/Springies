@@ -6,6 +6,7 @@ import org.jbox2d.dynamics.Body;
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
+import jgame.JGObject;
 
 public class Mass extends PhysicalObjectRect {
 

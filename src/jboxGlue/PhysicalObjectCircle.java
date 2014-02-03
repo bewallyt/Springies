@@ -44,7 +44,7 @@ public class PhysicalObjectCircle extends PhysicalObject
         init(radius, mass);
     }
 
-    private void init (double radius, double mass)
+    protected void init (double radius, double mass)
     {
         // save arguments
         myRadius = radius;
