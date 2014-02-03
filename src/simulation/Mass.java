@@ -81,8 +81,10 @@ public class Mass extends PhysicalObjectCircle {
 	}
 	
 	private void initViscosity(){
-	myBody.setLinearVelocity(Viscosity.setViscosity(this, 1));
+	myBody.setLinearVelocity(Viscosity.setViscosity(this, 0.95));
 	}
+	
+	
 
 
     
