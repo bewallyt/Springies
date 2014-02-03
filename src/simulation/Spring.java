@@ -7,7 +7,6 @@ import jgame.JGColor;
 public class Spring extends PhysicalObject {
 	/* Mass objects connected by the Spring */
 	Mass myMass1, myMass2;
-	private double x1, y1, x2, y2;
 
 	private double myRestLength;
 	private double mySpringyness;
@@ -19,7 +18,7 @@ public class Spring extends PhysicalObject {
 		myMass2 = Springies.Masses.get(m2);
 		myRestLength = restL;
 		mySpringyness = K;
-		paintShape();
+		//paintShape();
 	}
 
 	public void move() {
@@ -40,7 +39,7 @@ public class Spring extends PhysicalObject {
 		double dist = Math.sqrt(Math.pow(
 				dx, 2) + Math.pow(dy, 2));
 		//System.out.println("dist: " + dist);
-		double magnitude = mySpringyness * (dist - myRestLength) * 75000;
+		double magnitude = mySpringyness * (dist - myRestLength) * 70;
 		//double angle = Math.atan(dy / dx);
 		double xComp = dx / dist * magnitude; //Math.cos(angle) * magnitude;
 		double yComp = dy / dist * magnitude;//Math.sin(angle) * magnitude;

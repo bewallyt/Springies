@@ -18,6 +18,7 @@ import org.jbox2d.common.Vec2;
 import forces.CenterOfMass;
 import simulation.FixedMass;
 import simulation.Mass;
+import simulation.Muscle;
 import simulation.Spring;
 import simulation.XMLParser;
 
@@ -66,6 +67,7 @@ public class Springies extends JGEngine {
 		addBall();
 		createMasses();
 		createSprings();
+		createMuscles();
 		addWalls();
 	}
 
@@ -109,7 +111,7 @@ public class Springies extends JGEngine {
 
 	public void createMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("ball.xml");
+		importObject.readXMLObject("assets/daintywalker.xml");
 
 		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getMassMap());
@@ -139,7 +141,7 @@ public class Springies extends JGEngine {
 
 	public void createFixedMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("ball.xml");
+		importObject.readXMLObject("assets/daintywalker.xml");
 		HashMap<String, ArrayList<Double>> fixedMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getFixedMap());
 
@@ -163,7 +165,7 @@ public class Springies extends JGEngine {
 
 	public void createSprings() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("ball.xml");
+		importObject.readXMLObject("assets/daintywalker.xml");
 		ArrayList<ArrayList<Object>> tempSprings = new ArrayList<ArrayList<Object>>(
 				importObject.getSpringList());
 		// Mass mass1 = new Mass();
@@ -181,6 +183,28 @@ public class Springies extends JGEngine {
 
 	}
 
+	ArrayList<Muscle> Muscles = new ArrayList<Muscle>();
+	public void createMuscles() {
+		XMLParser importObject = new XMLParser();
+		importObject.readXMLObject("assets/daintywalker.xml");
+		ArrayList<ArrayList<Object>> tempMuscles = new ArrayList<ArrayList<Object>>(
+				importObject.getMuscleList());
+		// Mass mass1 = new Mass();
+
+		// ArrayList<Spring> Springs = new ArrayList<Spring>();
+
+		for (int i = 0; i < tempMuscles.size(); i++) {
+
+			Muscle tempMuscle = new Muscle((String) tempMuscles.get(i).get(0),
+					(String) tempMuscles.get(i).get(1), (Double) tempMuscles
+							.get(i).get(2), (Double) tempMuscles.get(i).get(3), 
+							(Double) tempMuscles.get(i).get(4));
+
+			Muscles.add(tempMuscle);
+		}
+
+	}
+	
 	private void addWalls() {
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
