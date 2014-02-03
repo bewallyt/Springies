@@ -29,6 +29,7 @@ public class Spring extends PhysicalObject {
 	}
 
 	public void move() {
+		/**
 		double width = Math.abs(x1 - x2);
 		double height = Math.abs(y1 - y2);
 		double xCorner = Math.min(x1, x2);
@@ -41,13 +42,37 @@ public class Spring extends PhysicalObject {
 			x = myEngine.getMouseX();
 			y = myEngine.getMouseY();
 		}
+		*/
 	}
-
+	
 	@Override
 	protected void paintShape() {
 		myEngine.setColor(JGColor.green);
 		myEngine.drawLine(x1, y1, x2, y2);
-
+		
+	}
+	
+	public void springForce(){
+		double distance = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2, 2));
+		double[] vec12 = findVec(x1,y1,x2,y2);
+		myMass1.setForce(vec12[0],vec12[1]);
+		double[] vec21 = findVec(x2,y2,x1,y1);
+		myMass2.setForce(vec21[0],vec21[1]);
+		
+	}
+	
+	public double[] findVec(double xp1, double yp1, double xp2, double yp2)	{
+		double dist = Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2, 2));
+		double length = xp1-xp2;
+		double height = yp1-yp2;
+		double magnitude = mySpringyness*(dist - myRestLength);
+		double angle = Math.atan(height/length);
+		double xComp = Math.cos(angle)*magnitude;
+		double yComp = Math.sin(angle)*magnitude;
+		double[] output = new double[2];
+		output[0] = xComp;
+		output[1] = yComp;
+		return output;
 	}
 
 }
