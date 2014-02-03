@@ -38,7 +38,7 @@ public class Spring extends PhysicalObject {
 		springForce();
 	}
 
-	public void springForce() {
+	private void springForce() {
 		double dist = Math.sqrt(Math.pow(
 				myMass1.getMassX() - myMass2.getMassX(), 2)
 				+ Math.pow(myMass1.getMassY() - myMass2.getMassY(), 2));
@@ -46,13 +46,11 @@ public class Spring extends PhysicalObject {
 		double height = myMass1.getMassY() - myMass2.getMassY();
 		double magnitude = mySpringyness * (dist - myRestLength);
 		double angle = Math.atan(height / length);
-		double xComp = Math.cos(angle) * magnitude;
-		double yComp = Math.sin(angle) * magnitude;
+		double xComp = Math.cos(angle) * magnitude*100;
+		double yComp = Math.sin(angle) * magnitude*100;
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
 
-		System.out.println("Mass " + myMass1 + " x: " + xComp);
-		System.out.println("Mass " + myMass1 + " y: " + yComp);
 
 	}
 

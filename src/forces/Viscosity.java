@@ -8,17 +8,12 @@ import simulation.Mass;
 
 public class Viscosity{
 
-	public static void setViscosity(Mass m,double magnitude){
+	public static Vec2 setViscosity(Mass m,double magnitude){
 	Vec2 linearVelocity = m.getVelocity();
 		linearVelocity.x *= magnitude;
 		linearVelocity.y *= magnitude;
-		myBody.setLinearVelocity(linearVelocity);
+		return linearVelocity;
 	}
 
-	@Override
-	protected void paintShape() {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
