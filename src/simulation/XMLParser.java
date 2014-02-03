@@ -104,7 +104,7 @@ public class XMLParser {
 //						System.out.println("y: " + element.getAttribute("y"));
 						
 						massList.add(Double.parseDouble(element.getAttribute("x")));
-						massList.add(Double.parseDouble(element.getAttribute("y"))-100);
+						massList.add(Double.parseDouble(element.getAttribute("y"))-200);
 						
 						if (element.getAttribute("vx").length() == 0) {
 							double vx = 0;

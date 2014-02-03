@@ -38,7 +38,6 @@ public class Main
             public void actionPerformed (ActionEvent arg0) {
                //sp.addBall();
                // sp.createMasses();
-
                 sp.createMasses();
                // sp.createSprings();
             }
