@@ -116,6 +116,8 @@ public class Springies extends JGEngine {
 			Mass tempMass = new Mass(key, 15, 15, value.get(0), value.get(1), 50,
 					value.get(2), value.get(3));
 			
+			tempMass.setPos(value.get(0), value.get(1));
+			
 			Masses.put(key, tempMass);
 			
 		}
@@ -143,6 +145,8 @@ public class Springies extends JGEngine {
 			}
 		}
 	}
+	
+	ArrayList<Spring> Springs = new ArrayList<Spring>();
 
 	public void createSprings() {
 		XMLParser importObject = new XMLParser();
@@ -151,7 +155,7 @@ public class Springies extends JGEngine {
 				importObject.getSpringList());
 		// Mass mass1 = new Mass();
 
-		ArrayList<Spring> Springs = new ArrayList<Spring>();
+//		ArrayList<Spring> Springs = new ArrayList<Spring>();
 
 		for (int i = 0; i < tempSprings.size(); i++) {
 			Springs.add(new Spring((String) tempSprings.get(i).get(0),
@@ -190,8 +194,13 @@ public class Springies extends JGEngine {
 	public void doFrame() {
 		// update game objects
 		WorldManager.getWorld().step(1f, 1);
+//		createSprings();
 		moveObjects();
 		checkCollision(1 + 2, 1);
+		for(Spring s : Springs){
+			
+		}
+	
 	}
 
 	@Override

@@ -129,4 +129,9 @@ public abstract class PhysicalObject extends JGObject
     }
 
     protected abstract void paintShape ();
+
+	public void setPos() {
+		// TODO Auto-generated method stub
+		
+	}
 }
