@@ -35,16 +35,28 @@ public class Spring extends PhysicalObject {
 	}
 
 	public void springForce() {
+		/**
+		double dx=myMass2.x-myMass1.x;
+		double dy=myMass2.y-myMass1.y;
+		double distance=Math.sqrt((dx*dx) + (dy*dy));
+		double disp=distance-myRestLength;
+		System.out.println(disp);
+		double unitx=dx/distance;
+		double unity=dy/distance;
+		
+		
+		myMass1.setForce(constant*disp*unitx*Springies.myViscosity, constant*disp*unity*Springies.myViscosity);
+		myMass2.setForce(-constant*disp*unitx*Springies.myViscosity, -constant*disp*unity*Springies.myViscosity);
+		*/
+		double dx = myMass2.getMassX() - myMass1.getMassX();
+		double dy = myMass2.getMassY() - myMass1.getMassY();
 		double dist = Math.sqrt(Math.pow(
-				myMass1.getMassX() - myMass2.getMassX(), 2)
-				+ Math.pow(myMass1.getMassY() - myMass2.getMassY(), 2));
+				dx, 2) + Math.pow(dy, 2));
 		System.out.println("dist: " + dist);
-		double length = myMass2.getMassX() - myMass1.getMassX();
-		double height = myMass2.getMassY() - myMass1.getMassY();
-		double magnitude = mySpringyness * (dist - myRestLength) * 500;
-		double angle = Math.atan(height / length);
-		double xComp = Math.cos(angle) * magnitude;
-		double yComp = Math.sin(angle) * magnitude;
+		double magnitude = mySpringyness * (dist - myRestLength) * 75000;
+		//double angle = Math.atan(dy / dx);
+		double xComp = dx / dist * magnitude; //Math.cos(angle) * magnitude;
+		double yComp = dy / dist * magnitude;//Math.sin(angle) * magnitude;
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
 	}
