@@ -135,8 +135,15 @@ public class ObjectParser{
 
 						nestedSpringList.add(element.getAttribute("a"));
 						nestedSpringList.add(element.getAttribute("b"));
-						nestedSpringList.add(Double.parseDouble(element
-								.getAttribute("restlength")));
+
+						if (element.getAttribute("restlength").length() == 0) {
+							double restLength = 1.0;
+							nestedSpringList.add(restLength);
+
+						} else {
+							nestedSpringList.add(Double.parseDouble(element
+									.getAttribute("restlength")));
+						}
 
 						if (element.getAttribute("constant").length() == 0) {
 							double springConstant = 1.0;
@@ -162,8 +169,15 @@ public class ObjectParser{
 
 						nestedMuscleList.add(element.getAttribute("a"));
 						nestedMuscleList.add(element.getAttribute("b"));
-						nestedMuscleList.add(Double.parseDouble(element
-								.getAttribute("restlength")));
+						
+						if (element.getAttribute("restlength").length() == 0) {
+							double restlength = 1;
+							nestedMuscleList.add(restlength);
+
+						} else {
+							nestedMuscleList.add(Double.parseDouble(element
+									.getAttribute("restlength")));
+						}
 
 						if (element.getAttribute("constant").length() == 0) {
 							double muscleConstant = 1;

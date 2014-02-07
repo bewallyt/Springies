@@ -4,26 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
 import jboxGlue.PhysicalObject;
 import jboxGlue.PhysicalObjectCircle;
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
-import jgame.JGObject;
 import jgame.platform.JGEngine;
-
 import org.jbox2d.common.Vec2;
-
-import forces.CenterOfMass;
-import simulation.FixedMass;
 import simulation.Mass;
 import simulation.Muscle;
 import simulation.Spring;
