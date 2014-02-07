@@ -1,23 +1,25 @@
 package simulation;
 
-import springies.Springies;
+import initialize.ObjectParser;
+
+import java.util.ArrayList;
+import java.util.List;
 import jgame.JGColor;
 
 public class Muscle extends Spring	{
 	
 	/* Mass objects connected by the Spring */
-	Mass myMass1, myMass2;
-
+	private Mass myMass1, myMass2;
+	private static	List<Muscle> Muscles = new ArrayList<Muscle>();
 	private double myRestLength;
 	private double mySpringyness;
-	
 	private double myAmplitude;
 	
 	public Muscle(String m1, String m2, double restL, double K, 
 			double amp) {
 		super(m1, m2, restL, K);
-		myMass1 = Springies.Masses.get(m1);
-		myMass2 = Springies.Masses.get(m2);
+		myMass1 = Mass.getMasses().get(m1);
+		myMass2 = Mass.getMasses().get(m2);
 		myRestLength = restL;
 		mySpringyness = K;
 		myAmplitude = amp;
@@ -48,6 +50,26 @@ public class Muscle extends Spring	{
 		double yComp = dy / dist * magnitude;
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
+	}
+	
+
+	public static void createMuscles() {
+
+		ObjectParser importMuscles = new ObjectParser();
+
+		List<List<Object>> tempMuscles = new ArrayList<List<Object>>(
+				importMuscles.getMuscleList());
+
+		for (int i = 0; i < tempMuscles.size(); i++) {
+
+			Muscle tempMuscle = new Muscle((String) tempMuscles.get(i).get(0),
+					(String) tempMuscles.get(i).get(1), (Double) tempMuscles
+							.get(i).get(2), (Double) tempMuscles.get(i).get(3), 
+							(Double) tempMuscles.get(i).get(4));
+
+			Muscles.add(tempMuscle);
+		}
+
 	}
 	
 }

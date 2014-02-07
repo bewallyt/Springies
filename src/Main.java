@@ -1,55 +1,16 @@
-import simulation.XMLParser;
-import springies.Springies;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import initialize.SimpleFileChooser;
 
 
 /**
  * Creates window that can be moved, resized, and closed by the user.
  * 
- * @author Robert C. Duvall
+ * @author Robert C. Duvall, In-Young Jo, Benson Tran.
  */
-public class Main
-{
-    // constants
-    public static final Dimension SIZE = new Dimension(800, 600);
-    public static final String TITLE = "Springies!";
+public class Main {
 
-    /**
-     * main --- where the program starts
-     * 
-     * @param args
-     */
-    public static void main (String args[])
-    {
-
-
-        // view of user's content
-        final Springies sp = new Springies();
-        JButton jb = new JButton("Make new Ball");
-        jb.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed (ActionEvent arg0) {
-               //sp.addBall();
-               // sp.createMasses();
-                sp.createMasses();
-               // sp.createSprings();
-            }
-        });
-        // container that will work with user's OS
-        JFrame frame = new JFrame(TITLE);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // add our user interface components
-        frame.getContentPane().add(sp, BorderLayout.CENTER);
-        frame.getContentPane().add(jb, BorderLayout.SOUTH);
-        // display them
-        frame.pack();
-        frame.setVisible(true);
-    }
+	public static void main(String args[]) {
+		SimpleFileChooser sfc = new SimpleFileChooser();
+		sfc.setVisible(true);
+		
+	}
 }

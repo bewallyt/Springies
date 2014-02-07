@@ -1,24 +1,27 @@
 package simulation;
 
-import springies.Springies;
+import initialize.ObjectParser;
+import java.util.ArrayList;
+import java.util.List;
 import jboxGlue.PhysicalObject;
 import jgame.JGColor;
 
 public class Spring extends PhysicalObject {
 	/* Mass objects connected by the Spring */
-	Mass myMass1, myMass2;
 
+	private Mass myMass1, myMass2;
+	private static List<Spring> Springs = new ArrayList<Spring>();
 	private double myRestLength;
 	private double mySpringyness;
 
 	/* Spring constructor with springyness */
 	public Spring(String m1, String m2, Double restL, Double K) {
 		super("spring", 0, JGColor.blue);
-		myMass1 = Springies.Masses.get(m1);
-		myMass2 = Springies.Masses.get(m2);
+		myMass1 = Mass.getMasses().get(m1);
+		myMass2 = Mass.getMasses().get(m2);
 		myRestLength = restL;
 		mySpringyness = K;
-		//paintShape();
+
 	}
 
 	public void move() {
@@ -34,18 +37,34 @@ public class Spring extends PhysicalObject {
 	}
 
 	public void springForce() {
+
 		double dx = myMass2.getMassX() - myMass1.getMassX();
 		double dy = myMass2.getMassY() - myMass1.getMassY();
-		double dist = Math.sqrt(Math.pow(
-				dx, 2) + Math.pow(dy, 2));
+		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 		double magnitude = mySpringyness * (dist - myRestLength) * 80000;
-		//double angle = Math.atan(dy / dx);
-		double xComp = dx / dist * magnitude; //Math.cos(angle) * magnitude;
-		double yComp = dy / dist * magnitude;//Math.sin(angle) * magnitude;
+		double xComp = dx / dist * magnitude;
+		double yComp = dy / dist * magnitude;
+
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
 	}
 
+	public static void createSprings() {
 
+		ObjectParser importSprings = new ObjectParser();
+
+		List<List<Object>> tempSprings = new ArrayList<List<Object>>(
+				importSprings.getSpringList());
+
+		for (int i = 0; i < tempSprings.size(); i++) {
+
+			Spring tempSpring = new Spring((String) tempSprings.get(i).get(0),
+					(String) tempSprings.get(i).get(1), (Double) tempSprings
+							.get(i).get(2), (Double) tempSprings.get(i).get(3));
+
+			Springs.add(tempSpring);
+		}
+
+	}
 
 }
