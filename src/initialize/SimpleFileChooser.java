@@ -16,13 +16,8 @@ public class SimpleFileChooser extends JFrame {
 
 	private String objectString;
 	private String environmentString;
-	private int toggleClose = 0;
-	
-	public int getToggleClose() {
-		return toggleClose;
-	}
 
-	@SuppressWarnings("unused")
+
 	public SimpleFileChooser() {
 
 		super("Springies: Import XML Files");
@@ -78,16 +73,10 @@ public class SimpleFileChooser extends JFrame {
 		});
 
 		openButtonFinish.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-
-				ObjectParser object = new ObjectParser();
-				EnvironmentParser environment = new EnvironmentParser();
-				object.parseObject(objectString);
-				//environment.parseEnvironment(environmentString);
-				close();
+			public void actionPerformed(ActionEvent ae) {	
 				
-				Springies.createSpringies();
-				
+				close();		
+				Springies.createSpringies(objectString, environmentString);
 			}
 		});
 		

@@ -1,18 +1,30 @@
 package springies;
 
+import initialize.EnvironmentParser;
+import initialize.FixedParser;
+import initialize.MassParser;
+import initialize.MuscleParser;
+import initialize.SpringParser;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
+
 import jboxGlue.PhysicalObject;
 import jboxGlue.PhysicalObjectCircle;
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
 import jgame.platform.JGEngine;
+
 import org.jbox2d.common.Vec2;
+
+import simulation.FixedMass;
 import simulation.Mass;
 import simulation.Muscle;
 import simulation.Spring;
@@ -22,11 +34,16 @@ public class Springies extends JGEngine {
 	
 	public static final Dimension SIZE = new Dimension(800, 600);
 	public static final String TITLE = "Springies!";
+	private String object;
+	private String environment;
 
-	public Springies() {
+	public Springies(String object, String environment) {
 		int height = 480;
 		double aspect = 16.0 / 9.0;
 		initEngineComponent((int) (height * aspect), height);
+		
+		this.object = object;
+		this.environment = environment;
 	}
 
 	@Override
@@ -44,11 +61,23 @@ public class Springies extends JGEngine {
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
 		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
-		addBall();
-		Mass.createMasses();
-		Spring.createSprings();
-		Muscle.createMuscles();
+		//addBall();
 		addWalls();
+		
+		// Initialize Objects
+		FixedParser fixed = new FixedParser();
+		MassParser mass = new MassParser();
+		MuscleParser muscle = new MuscleParser();
+		SpringParser spring = new SpringParser();
+		EnvironmentParser environment = new EnvironmentParser();
+
+		fixed.createFixedMasses(object);
+		List<Mass> masses = mass.createMasses(object);
+		System.out.println(masses.size());
+		muscle.createMuscles(object, masses);
+		spring.createSprings(object, masses);
+		
+		//environment.parseEnvironment(environmentString);
 	}
 
 	public void addBall() {
@@ -72,7 +101,7 @@ public class Springies extends JGEngine {
 			// myBody.setLinearVelocity(velocity);
 			// }
 		};
-		ball.setPos(displayWidth() / 2, displayHeight() / 2);
+		ball.setPos(285, 190);
 
 		// ball.setForce(8000, -10000);
 
@@ -137,8 +166,8 @@ public class Springies extends JGEngine {
 	public void paintFrame() {
 	}
 	
-	public static void createSpringies(){
-		final Springies sp = new Springies();
+	public static void createSpringies(String object, String environment){
+		final Springies sp = new Springies(object, environment);
 		JButton jb = new JButton("Make new Ball");
 
 		jb.addActionListener(new ActionListener() {
@@ -155,6 +184,9 @@ public class Springies extends JGEngine {
 		frame.pack();
 		
 		frame.setVisible(true);
+		
+		
+		
 	}
 	
 

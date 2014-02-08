@@ -1,8 +1,5 @@
 package simulation;
 
-import initialize.ObjectParser;
-import java.util.ArrayList;
-import java.util.List;
 import jboxGlue.PhysicalObject;
 import jgame.JGColor;
 
@@ -10,15 +7,14 @@ public class Spring extends PhysicalObject {
 	/* Mass objects connected by the Spring */
 
 	private Mass myMass1, myMass2;
-	private static List<Spring> Springs = new ArrayList<Spring>();
 	private double myRestLength;
 	private double mySpringyness;
 
 	/* Spring constructor with springyness */
-	public Spring(String m1, String m2, Double restL, Double K) {
+	public Spring(Mass m1, Mass m2, Double restL, Double K) {
 		super("spring", 0, JGColor.blue);
-		myMass1 = Mass.getMasses().get(m1);
-		myMass2 = Mass.getMasses().get(m2);
+		myMass1 = m1;
+		myMass2 = m2;
 		myRestLength = restL;
 		mySpringyness = K;
 
@@ -47,24 +43,6 @@ public class Spring extends PhysicalObject {
 
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
-	}
-
-	public static void createSprings() {
-
-		ObjectParser importSprings = new ObjectParser();
-
-		List<List<Object>> tempSprings = new ArrayList<List<Object>>(
-				importSprings.getSpringList());
-
-		for (int i = 0; i < tempSprings.size(); i++) {
-
-			Spring tempSpring = new Spring((String) tempSprings.get(i).get(0),
-					(String) tempSprings.get(i).get(1), (Double) tempSprings
-							.get(i).get(2), (Double) tempSprings.get(i).get(3));
-
-			Springs.add(tempSpring);
-		}
-
 	}
 
 }
