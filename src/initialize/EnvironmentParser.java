@@ -12,40 +12,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class EnvironmentParser{
+public class EnvironmentParser {
 
 	/* Initializes Maps and Lists to hold data from XML */
 
-	private static List<List<Object>> wallList = new ArrayList<List<Object>>();
-	private static List<Double> centermassList = new ArrayList<Double>();
-	private static List<Double> gravityList = new ArrayList<Double>();
-	private static double viscosityValue;
+	public List<Double> readGravity(String xmlFile) {
 
-	public List<List<Object>> getWallList() {
-		return wallList;
-	}
+		List<Double> gravityList = new ArrayList<Double>();
 
-	public List<Double> getGravityList() {
-		return gravityList;
-	}
-
-	public List<Double> getCentermassList() {
-		return centermassList;
-	}
-
-	public double getViscosityValue() {
-		return viscosityValue;
-	}
-
-	public void parseEnvironment(String myXMLFile) {
-
-		readXML(myXMLFile, "gravity");
-		readXML(myXMLFile, "viscosity");
-		readXML(myXMLFile, "centermass");
-		readXML(myXMLFile, "wall");
-	}
-
-	public void readXML(String xmlFile, String type) {
 		try {
 
 			/* Initializes XML Reader */
@@ -61,77 +35,145 @@ public class EnvironmentParser{
 			 * centerofmass, wall
 			 */
 
-			NodeList nodes = doc.getElementsByTagName(type);
+			NodeList nodes = doc.getElementsByTagName("gravity");
 
-			if (type.equals("gravity")) {
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
 
-				for (int i = 0; i < nodes.getLength(); i++) {
-					Node node = nodes.item(i);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
 
-					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						Element element = (Element) node;
+					gravityList.add(Double.parseDouble(element
+							.getAttribute("direction")));
+					gravityList.add(Double.parseDouble(element
+							.getAttribute("magnitude")));
 
-						gravityList.add(Double.parseDouble(element
-								.getAttribute("direction")));
-						gravityList.add(Double.parseDouble(element
-								.getAttribute("magnitude")));
-
-					}
 				}
 			}
-
-			else if (type.equals("viscosity")) {
-
-				for (int i = 0; i < nodes.getLength(); i++) {
-					Node node = nodes.item(i);
-
-					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						Element element = (Element) node;
-
-						viscosityValue = Double.parseDouble(element
-								.getAttribute("magnitude"));
-					}
-				}
-			}
-
-			else if (type.equals("centermass")) {
-
-				for (int i = 0; i < nodes.getLength(); i++) {
-					Node node = nodes.item(i);
-
-					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						Element element = (Element) node;
-
-						centermassList.add(Double.parseDouble(element
-								.getAttribute("magnitude")));
-						centermassList.add(Double.parseDouble(element
-								.getAttribute("exponent")));
-					}
-				}
-			}
-
-			else if (type.equals("wall")) {
-
-				for (int i = 0; i < nodes.getLength(); i++) {
-					ArrayList<Object> nestedWallList = new ArrayList<Object>();
-					Node node = nodes.item(i);
-
-					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						Element element = (Element) node;
-
-						nestedWallList.add(Double.parseDouble(element
-								.getAttribute("id")));
-						nestedWallList.add(Double.parseDouble(element
-								.getAttribute("magnitude")));
-						nestedWallList.add(Double.parseDouble(element
-								.getAttribute("exponent")));
-					}
-					wallList.add(nestedWallList);
-				}
-			}
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return gravityList;
+
+	}
+
+	public double readViscosity(String xmlFile) {
+
+		double viscosityValue = 0;
+
+		try {
+
+			/* Initializes XML Reader */
+			File xmlCode = new File(xmlFile);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(xmlCode);
+			doc.getDocumentElement().normalize();
+
+			/**
+			 * Reads environment in depending on type: gravity, viscosity,
+			 * centerofmass, wall
+			 */
+
+			NodeList nodes = doc.getElementsByTagName("viscosity");
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
+
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
+
+					viscosityValue = Double.parseDouble(element
+							.getAttribute("magnitude"));
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return viscosityValue;
+	}
+
+	public List<Double> readCOM(String xmlFile) {
+
+		List<Double> centermassList = new ArrayList<Double>();
+
+		try {
+
+			/* Initializes XML Reader */
+			File xmlCode = new File(xmlFile);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(xmlCode);
+			doc.getDocumentElement().normalize();
+
+			/**
+			 * Reads environment in depending on type: gravity, viscosity,
+			 * centerofmass, wall
+			 */
+
+			NodeList nodes = doc.getElementsByTagName("centermass");
+
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
+
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
+
+					centermassList.add(Double.parseDouble(element
+							.getAttribute("magnitude")));
+					centermassList.add(Double.parseDouble(element
+							.getAttribute("exponent")));
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return centermassList;
+
+	}
+
+	public List<List<Object>> readWall(String xmlFile) {
+
+		List<List<Object>> wallList = new ArrayList<List<Object>>();
+
+		try {
+
+			/* Initializes XML Reader */
+			File xmlCode = new File(xmlFile);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(xmlCode);
+			doc.getDocumentElement().normalize();
+
+			/**
+			 * Reads environment in depending on type: gravity, viscosity,
+			 * centerofmass, wall
+			 */
+
+			NodeList nodes = doc.getElementsByTagName("wall");
+
+			for (int i = 0; i < nodes.getLength(); i++) {
+				ArrayList<Object> nestedWallList = new ArrayList<Object>();
+				Node node = nodes.item(i);
+
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) node;
+
+					nestedWallList.add(Double.parseDouble(element
+							.getAttribute("id")));
+					nestedWallList.add(Double.parseDouble(element
+							.getAttribute("magnitude")));
+					nestedWallList.add(Double.parseDouble(element
+							.getAttribute("exponent")));
+				}
+				wallList.add(nestedWallList);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return wallList;
 	}
 }

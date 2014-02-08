@@ -13,12 +13,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import simulation.FixedMass;
 import simulation.Mass;
 import simulation.Muscle;
 
 public class MuscleParser {
 
-	public List<Muscle> createMuscles(String xmlFile, List<Mass> masses) {
+	public List<Muscle> createMuscles(String xmlFile, List<Mass> masses,
+			List<FixedMass> fixedMasses) {
 
 		List<Muscle> muscles = new ArrayList<Muscle>();
 
@@ -45,12 +47,13 @@ public class MuscleParser {
 
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element) node;
+					Muscle tempMuscle;
 
 					muscleList.add(element.getAttribute("a"));
 					muscleList.add(element.getAttribute("b"));
 
 					if (element.getAttribute("restlength").length() == 0) {
-						muscleList.add(1.0);
+						muscleList.add(-1.0);
 
 					} else {
 						muscleList.add(Double.parseDouble(element
@@ -74,13 +77,33 @@ public class MuscleParser {
 					}
 
 					Mass m1 = findMass((String) muscleList.get(0), masses);
+					if (m1 == null) {
+						m1 = findFixed((String) muscleList.get(0), fixedMasses);
+					}
 					Mass m2 = findMass((String) muscleList.get(1), masses);
+					if (m2 == null) {
+						m2 = findFixed((String) muscleList.get(1), fixedMasses);
+					}
 
-					Muscle tempMuscle = new Muscle(m1, m2,
-							(Double) muscleList.get(2),
-							(Double) muscleList.get(3),
-							(Double) muscleList.get(4));
+					double dx = m2.getMassX() - m1.getMassX();
+					double dy = m2.getMassY() - m1.getMassY();
+					double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
+					m1 = findMass((String) muscleList.get(0), masses);
+					m2 = findMass((String) muscleList.get(1), masses);
+
+					if ((Double) muscleList.get(2) == -1.0) {
+						tempMuscle = new Muscle(m1, m2, dist,
+								(Double) muscleList.get(3),
+								(Double) muscleList.get(4));
+					}
+
+					else {
+						tempMuscle = new Muscle(m1, m2,
+								(Double) muscleList.get(2),
+								(Double) muscleList.get(3),
+								(Double) muscleList.get(4));
+					}
 					muscles.add(tempMuscle);
 				}
 
@@ -95,6 +118,15 @@ public class MuscleParser {
 
 	public Mass findMass(String massID, List<Mass> mass) {
 		for (Mass m : mass) {
+			if (m.getID().equals(massID)) {
+				return m;
+			}
+		}
+		return null;
+	}
+
+	public Mass findFixed(String massID, List<FixedMass> fixedMass) {
+		for (FixedMass m : fixedMass) {
 			if (m.getID().equals(massID)) {
 				return m;
 			}
