@@ -74,26 +74,25 @@ public class Springies extends JGEngine {
 	public void addBall() {
 		// add a bouncy ball
 		// NOTE: you could make this into a separate class, but I'm lazy
-		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,10, 5);
+		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,10, 5)
 
 		{
-			// @Override
-			// public void hit(JGObject other) {
-			// // we hit something! bounce off it!
-			// Vec2 velocity = myBody.getLinearVelocity();
-			// // is it a tall wall?
-			// final double DAMPING_FACTOR = 0.8;
-			// boolean isSide = other.getBBox().height > other.getBBox().width;
-			// if (isSide) {
-			// velocity.x *= -DAMPING_FACTOR;
-			// } else {
-			// velocity.y *= -DAMPING_FACTOR;
-			// }
-			// // apply the change
-			// myBody.setLinearVelocity(velocity);
-			// }
-		}
-		;
+			 @Override
+			 public void hit(JGObject other) {
+			 // we hit something! bounce off it!
+			 Vec2 velocity = myBody.getLinearVelocity();
+			 // is it a tall wall?
+			 final double DAMPING_FACTOR = 0.8;
+			 boolean isSide = other.getBBox().height > other.getBBox().width;
+			 if (isSide) {
+			 velocity.x *= -DAMPING_FACTOR;
+			 } else {
+			 velocity.y *= -DAMPING_FACTOR;
+			 }
+			 // apply the change
+			 myBody.setLinearVelocity(velocity);
+			 }
+		};
 		ball.setPos(displayWidth() / 2, displayHeight() / 2);
 		System.out.println("displayWidth/2: " + displayWidth()/2);
 		System.out.println("displayHeight/2: " + displayHeight() / 2);
@@ -111,7 +110,7 @@ public class Springies extends JGEngine {
 
 	public void createMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("assets/daintywalker.xml");
+		importObject.readXMLObject("ball.xml");
 
 		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getMassMap());
@@ -141,7 +140,7 @@ public class Springies extends JGEngine {
 
 	public void createFixedMasses() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("assets/daintywalker.xml");
+		importObject.readXMLObject("ball.xml");
 		HashMap<String, ArrayList<Double>> fixedMassMap = new HashMap<String, ArrayList<Double>>(
 				importObject.getFixedMap());
 
@@ -165,7 +164,7 @@ public class Springies extends JGEngine {
 
 	public void createSprings() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("assets/daintywalker.xml");
+		importObject.readXMLObject("ball.xml");
 		ArrayList<ArrayList<Object>> tempSprings = new ArrayList<ArrayList<Object>>(
 				importObject.getSpringList());
 		// Mass mass1 = new Mass();
@@ -186,7 +185,7 @@ public class Springies extends JGEngine {
 	ArrayList<Muscle> Muscles = new ArrayList<Muscle>();
 	public void createMuscles() {
 		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("assets/daintywalker.xml");
+		importObject.readXMLObject("ball.xml");
 		ArrayList<ArrayList<Object>> tempMuscles = new ArrayList<ArrayList<Object>>(
 				importObject.getMuscleList());
 		// Mass mass1 = new Mass();
@@ -237,7 +236,7 @@ public class Springies extends JGEngine {
 		checkCollision(1 + 2, 1);
 
 		for (Mass m : massesCenter) {
-			m.setForce(applyCenterForce(massesCenter)[0],applyCenterForce(massesCenter)[1]);
+			//m.setForce(applyCenterForce(massesCenter)[0],applyCenterForce(massesCenter)[1]);
 
 		}
 
