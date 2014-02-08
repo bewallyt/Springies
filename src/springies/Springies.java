@@ -1,57 +1,54 @@
 package springies;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
+import initialize.EnvironmentParser;
+import initialize.FixedParser;
+import initialize.MassParser;
+import initialize.MuscleParser;
+import initialize.SpringParser;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 import jboxGlue.PhysicalObject;
 import jboxGlue.PhysicalObjectCircle;
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
-import jgame.JGObject;
 import jgame.platform.JGEngine;
 
 import org.jbox2d.common.Vec2;
 
-import forces.CenterOfMass;
 import simulation.FixedMass;
 import simulation.Mass;
 import simulation.Muscle;
 import simulation.Spring;
-import simulation.XMLParser;
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
 
-	public static HashMap<String, Mass> Masses = new HashMap<String, Mass>();
+	public static final Dimension SIZE = new Dimension(800, 600);
+	public static final String TITLE = "Springies!";
+	private String object;
+	private String environment;
 
-	public static HashMap<String, Mass> getMasses() {
-		return Masses;
-	}
-
-	public void setMasses(HashMap<String, Mass> masses) {
-		Masses = masses;
-	}
-
-	public Springies() {
-		// set the window size
+	public Springies(String object, String environment) {
 		int height = 480;
 		double aspect = 16.0 / 9.0;
 		initEngineComponent((int) (height * aspect), height);
+
+		this.object = object;
+		this.environment = environment;
 	}
 
 	@Override
 	public void initCanvas() {
-		// I have no idea what tiles do...
-		setCanvasSettings(1, // width of the canvas in tiles
-				1, // height of the canvas in tiles
-				displayWidth(), // width of one tile
-				displayHeight(), // height of one tile
-				null,// foreground colour -> use default colour white
-				null,// background colour -> use default colour black
-				null); // standard font -> use default font
+		setCanvasSettings(1, 1, displayWidth(),displayHeight(),null,null,null); 
 	}
 
 	@Override
@@ -64,39 +61,48 @@ public class Springies extends JGEngine {
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
 		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
-		addBall();
-		createMasses();
-		createSprings();
-		createMuscles();
+		//addBall();
 		addWalls();
+
+		// Initialize Objects
+		FixedParser fixed = new FixedParser();
+		MassParser mass = new MassParser();
+		MuscleParser muscle = new MuscleParser();
+		SpringParser spring = new SpringParser();
+		EnvironmentParser environment = new EnvironmentParser();
+
+		fixed.createFixedMasses(object);
+		List<Mass> masses = mass.createMasses(object);
+		System.out.println(masses.size());
+		muscle.createMuscles(object, masses);
+		spring.createSprings(object, masses);
+
+		//environment.parseEnvironment(environmentString);
 	}
 
 	public void addBall() {
 		// add a bouncy ball
 		// NOTE: you could make this into a separate class, but I'm lazy
-		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,10, 5)
-
+		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,10, 5);
 		{
-			 @Override
-			 public void hit(JGObject other) {
-			 // we hit something! bounce off it!
-			 Vec2 velocity = myBody.getLinearVelocity();
-			 // is it a tall wall?
-			 final double DAMPING_FACTOR = 0.8;
-			 boolean isSide = other.getBBox().height > other.getBBox().width;
-			 if (isSide) {
-			 velocity.x *= -DAMPING_FACTOR;
-			 } else {
-			 velocity.y *= -DAMPING_FACTOR;
-			 }
-			 // apply the change
-			 myBody.setLinearVelocity(velocity);
-			 }
+			// @Override
+			// public void hit(JGObject other) {
+			// // we hit something! bounce off it!
+			// Vec2 velocity = myBody.getLinearVelocity();
+			// // is it a tall wall?
+			// final double DAMPING_FACTOR = 0.8;
+			// boolean isSide = other.getBBox().height > other.getBBox().width;
+			// if (isSide) {
+			// velocity.x *= -DAMPING_FACTOR;
+			// } else {
+			// velocity.y *= -DAMPING_FACTOR;
+			// }
+			// // apply the change
+			// myBody.setLinearVelocity(velocity);
+			// }
 		};
-		ball.setPos(displayWidth() / 2, displayHeight() / 2);
-		System.out.println("displayWidth/2: " + displayWidth()/2);
-		System.out.println("displayHeight/2: " + displayHeight() / 2);
-		
+		ball.setPos(285, 190);
+
 		// ball.setForce(8000, -10000);
 
 	}
@@ -104,106 +110,18 @@ public class Springies extends JGEngine {
 	/**
 	 * Instantiate objects from XML files below.
 	 */
-	
-	// Horrible code...but needed for Center Of Mass now.
-	ArrayList<Mass> massesCenter = new ArrayList<Mass>();
 
-	public void createMasses() {
-		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("ball.xml");
 
-		HashMap<String, ArrayList<Double>> importMassMap = new HashMap<String, ArrayList<Double>>(
-				importObject.getMassMap());
-		
 
-		for (Entry<String, ArrayList<Double>> entry : importMassMap.entrySet()) {
-			String key = entry.getKey();
-			ArrayList<Double> value = entry.getValue();
-			Mass tempMass = new Mass(key, 5, value.get(0), value.get(1),
-					50, value.get(2), value.get(3));
+//	public double[] applyCenterForce(ArrayList<Mass> massesCenter){
+//		
+//		return CenterOfMass.centerForce(massesCenter);
+//		
+//	}
+//
 
-			tempMass.setPos(value.get(0), value.get(1));
 
-			Masses.put(key, tempMass);
-			massesCenter.add(tempMass);
 
-		}
-		
-
-	}
-	
-	public double[] applyCenterForce(ArrayList<Mass> massesCenter){
-		
-		return CenterOfMass.centerForce(massesCenter);
-		
-	}
-
-	public void createFixedMasses() {
-		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("ball.xml");
-		HashMap<String, ArrayList<Double>> fixedMassMap = new HashMap<String, ArrayList<Double>>(
-				importObject.getFixedMap());
-
-		HashMap<String, FixedMass> fixedMasses = new HashMap<String, FixedMass>();
-
-		for (Entry<String, ArrayList<Double>> entry : fixedMassMap.entrySet()) {
-			String key = entry.getKey();
-			ArrayList<Double> value = entry.getValue();
-			// System.out.println(key);
-			fixedMasses
-					.put(key, new FixedMass(key, value.get(0), value.get(1)));
-
-			for (int i = 0; i < value.size(); i++) {
-				double attr = value.get(i);
-				System.out.print(attr + " ");
-			}
-		}
-	}
-
-	ArrayList<Spring> Springs = new ArrayList<Spring>();
-
-	public void createSprings() {
-		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("ball.xml");
-		ArrayList<ArrayList<Object>> tempSprings = new ArrayList<ArrayList<Object>>(
-				importObject.getSpringList());
-		// Mass mass1 = new Mass();
-
-		// ArrayList<Spring> Springs = new ArrayList<Spring>();
-
-		for (int i = 0; i < tempSprings.size(); i++) {
-
-			Spring tempSpring = new Spring((String) tempSprings.get(i).get(0),
-					(String) tempSprings.get(i).get(1), (Double) tempSprings
-							.get(i).get(2), (Double) tempSprings.get(i).get(3));
-
-			Springs.add(tempSpring);
-		}
-
-	}
-
-	ArrayList<Muscle> Muscles = new ArrayList<Muscle>();
-	public void createMuscles() {
-		XMLParser importObject = new XMLParser();
-		importObject.readXMLObject("ball.xml");
-		ArrayList<ArrayList<Object>> tempMuscles = new ArrayList<ArrayList<Object>>(
-				importObject.getMuscleList());
-		// Mass mass1 = new Mass();
-
-		// ArrayList<Spring> Springs = new ArrayList<Spring>();
-
-		for (int i = 0; i < tempMuscles.size(); i++) {
-
-			Muscle tempMuscle = new Muscle((String) tempMuscles.get(i).get(0),
-					(String) tempMuscles.get(i).get(1), (Double) tempMuscles
-							.get(i).get(2), (Double) tempMuscles.get(i).get(3), 
-							(Double) tempMuscles.get(i).get(4));
-
-			Muscles.add(tempMuscle);
-		}
-
-	}
-	
 	private void addWalls() {
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
@@ -235,18 +153,41 @@ public class Springies extends JGEngine {
 		moveObjects();
 		checkCollision(1 + 2, 1);
 
-		for (Mass m : massesCenter) {
-			//m.setForce(applyCenterForce(massesCenter)[0],applyCenterForce(massesCenter)[1]);
+//		for (Mass m : massesCenter) {
+//			m.setForce(applyCenterForce(massesCenter)[0],applyCenterForce(massesCenter)[1]);
+//
+//		}
 
-		}
 
-		
 
 	}
 
 	@Override
 	public void paintFrame() {
-		// nothing to do
-		// the objects paint themselves
 	}
+
+	public static void createSpringies(String object, String environment){
+		final Springies sp = new Springies(object, environment);
+		JButton jb = new JButton("Make new Ball");
+
+		jb.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+
+			}
+		});
+
+		JFrame frame = new JFrame(TITLE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add(sp, BorderLayout.CENTER);
+		frame.getContentPane().add(jb, BorderLayout.SOUTH);
+		frame.pack();
+
+		frame.setVisible(true);
+
+
+
+	}
+
+
 }
