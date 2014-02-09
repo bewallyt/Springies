@@ -12,5 +12,4 @@ public class Viscosity{
 		return linearVelocity;
 	}
 
-
 }
