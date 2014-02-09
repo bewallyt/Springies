@@ -26,8 +26,6 @@ import org.jbox2d.common.Vec2;
 
 import simulation.FixedMass;
 import simulation.Mass;
-import simulation.Muscle;
-import simulation.Spring;
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
@@ -35,7 +33,7 @@ public class Springies extends JGEngine {
 	public static final Dimension SIZE = new Dimension(800, 600);
 	public static final String TITLE = "Springies!";
 	private String object;
-	private String environment;
+	private String environmentString;
 
 	public Springies(String object, String environment) {
 		int height = 480;
@@ -43,7 +41,7 @@ public class Springies extends JGEngine {
 		initEngineComponent((int) (height * aspect), height);
 
 		this.object = object;
-		this.environment = environment;
+		this.environmentString = environment;
 	}
 
 	@Override
@@ -69,15 +67,20 @@ public class Springies extends JGEngine {
 		MassParser mass = new MassParser();
 		MuscleParser muscle = new MuscleParser();
 		SpringParser spring = new SpringParser();
-		EnvironmentParser environment = new EnvironmentParser();
 
-		fixed.createFixedMasses(object);
+		List<FixedMass> fixedMasses = fixed.createFixedMasses(object);
 		List<Mass> masses = mass.createMasses(object);
-		System.out.println(masses.size());
-		muscle.createMuscles(object, masses);
-		spring.createSprings(object, masses);
+		muscle.createMuscles(object, masses, fixedMasses);
+		spring.createSprings(object, masses, fixedMasses);
 
-		//environment.parseEnvironment(environmentString);
+		// Initialize Environment Forces (Vectors need to be passed into Mass' move)
+		EnvironmentParser environment = new EnvironmentParser();
+		environment.readGravity(environmentString);
+		environment.readViscosity(environmentString);
+		environment.readCOM(environmentString);
+		environment.readWall(environmentString);
+
+
 	}
 
 	public void addBall() {

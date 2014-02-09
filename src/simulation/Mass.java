@@ -11,6 +11,7 @@ import jgame.JGColor;
 public class Mass extends PhysicalObjectCircle {
 
 	private String id;
+	private double mass;
 
 	/* Constructor */
 	public Mass(String id, double radius, double xCoord, double yCoord,
@@ -22,6 +23,7 @@ public class Mass extends PhysicalObjectCircle {
 		this.y = yCoord;
 		this.xspeed = xv;
 		this.yspeed = yv;
+		this.mass = mass;
 
 	}
 
@@ -35,6 +37,10 @@ public class Mass extends PhysicalObjectCircle {
 
 	public String getID() {
 		return this.id;
+	}
+	
+	public double getMass(){
+		return this.mass;
 	}
 
 	// int prevmousex = 0, prevmousey = 0;
@@ -60,22 +66,27 @@ public class Mass extends PhysicalObjectCircle {
 			remove();
 			return;
 		}
+		
 		// copy the position and rotation from the JBox world to the JGame world
 		Vec2 position = myBody.getPosition();
 		 this.x = position.x;
 		 this.y = position.y;
 		myRotation = -myBody.getAngle();
+		
+		// initialize environment forces
 
-		initViscosity();
+		//initViscosity();
+		
 	}
-
-	public Vec2 getVelocity() {
-		Vec2 velocity = myBody.getLinearVelocity();
-		return velocity;
-	}
-
-	private void initViscosity() {
-		myBody.setLinearVelocity(Viscosity.setViscosity(this, 0.95));
-	}
+//
+//	public Vec2 getVelocity() {
+//		Vec2 velocity = myBody.getLinearVelocity();
+//		return velocity;
+//	}
+//
+//	private void initViscosity() {
+//		myBody.setLinearVelocity(Viscosity.setViscosity(this, 0.95));
+//	}
+	
 
 }

@@ -78,7 +78,7 @@ public class MassParser {
 					// forces first, however.
 
 					Mass tempMass = new Mass(element.getAttribute("id"), 5,
-							massList.get(0), massList.get(1), 50,
+							massList.get(0), massList.get(1), massList.get(4),
 							massList.get(2), massList.get(3));
 					
 					tempMass.setPos(massList.get(0), massList.get(1));
