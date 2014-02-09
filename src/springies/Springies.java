@@ -35,7 +35,7 @@ public class Springies extends JGEngine {
 
 	public static final Dimension SIZE = new Dimension(800, 600);
 	public static final String TITLE = "Springies!";
-	
+
 	private String object;
 	private String environmentString;
 	private List<Double> comList;
@@ -91,6 +91,7 @@ public class Springies extends JGEngine {
 		comList = environment.readCOM(environmentString);
 		wallList = environment.readWall(environmentString);
 
+
 	}
 
 	public void addBall() {
@@ -126,13 +127,6 @@ public class Springies extends JGEngine {
 	 * Instantiate objects from XML files below.
 	 */
 
-	// public double[] applyCenterForce(ArrayList<Mass> massesCenter){
-	//
-	// return CenterOfMass.centerForce(massesCenter);
-	//
-	// }
-	//
-
 	private void addWalls() {
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
@@ -163,42 +157,39 @@ public class Springies extends JGEngine {
 		// createSprings();
 		moveObjects();
 		checkCollision(1 + 2, 1);
-		
-		//apple COM & Wall Repulsion & Viscosity
+
+		// apple COM & Wall Repulsion & Viscosity
 		CenterOfMass com = new CenterOfMass(comList.get(0), comList.get(1));
 
-		WallRepulsion wr0 = new WallRepulsion(1, wallList
-				.get(0).get(1), wallList.get(0).get(2));
+		WallRepulsion wr0 = new WallRepulsion(1, wallList.get(0).get(1),
+				wallList.get(0).get(2));
 
-		WallRepulsion wr1 = new WallRepulsion(2, wallList
-				.get(1).get(1), wallList.get(1).get(2));
+		WallRepulsion wr1 = new WallRepulsion(2, wallList.get(1).get(1),
+				wallList.get(1).get(2));
 
-		WallRepulsion wr2 = new WallRepulsion(3, wallList
-				.get(2).get(1), wallList.get(2).get(2));
+		WallRepulsion wr2 = new WallRepulsion(3, wallList.get(2).get(1),
+				wallList.get(2).get(2));
 
-		WallRepulsion wr3 = new WallRepulsion(4, wallList
-				.get(3).get(1), wallList.get(3).get(2));
-		
+		WallRepulsion wr3 = new WallRepulsion(4, wallList.get(3).get(1),
+				wallList.get(3).get(2));
+
 		Viscosity visc = new Viscosity(viscMag);
-		
 
 		for (Mass m : masses) {
-			
+
 			Vec2 comForce = com.obtainForce(m);
 			m.setForce(comForce.x, comForce.y);
 			visc.setViscosity(m.getVelocity());
-			
+
 			Vec2 wallForce0 = wr0.obtainForce(m, SIZE);
 			Vec2 wallForce1 = wr1.obtainForce(m, SIZE);
 			Vec2 wallForce2 = wr2.obtainForce(m, SIZE);
 			Vec2 wallForce3 = wr3.obtainForce(m, SIZE);
-			m.setForce(wallForce0.x*90, wallForce0.y*90);
-			m.setForce(wallForce1.x*90, wallForce1.y*90);
-			m.setForce(wallForce2.x*90, wallForce2.y*90);
-			m.setForce(wallForce3.x*90, wallForce3.y*90);
+			m.setForce(wallForce0.x * 90, wallForce0.y * 90);
+			m.setForce(wallForce1.x * 90, wallForce1.y * 90);
+			m.setForce(wallForce2.x * 90, wallForce2.y * 90);
+			m.setForce(wallForce3.x * 90, wallForce3.y * 90);
 		}
-
-
 
 	}
 
