@@ -3,11 +3,11 @@ package springies;
 import forces.CenterOfMass;
 import forces.Viscosity;
 import forces.WallRepulsion;
-import initialize.EnvironmentParser;
-import initialize.FixedParser;
-import initialize.MassParser;
-import initialize.MuscleParser;
-import initialize.SpringParser;
+import initialize2.EnvironmentParser;
+import initialize2.FixedParser;
+import initialize2.MassParser;
+import initialize2.MuscleParser;
+import initialize2.SpringParser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -29,6 +29,8 @@ import org.jbox2d.common.Vec2;
 
 import simulation.FixedMass;
 import simulation.Mass;
+import simulation.Muscle;
+import simulation.Spring;
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
@@ -42,7 +44,9 @@ public class Springies extends JGEngine {
 	private List<List<Double>> wallList;
 	private List<FixedMass> fixedMasses;
 	private List<Mass> masses;
-	private double viscMag;
+	private List<Spring> springs;
+	private List<Muscle> muscles;
+	private List<Double> viscMag;
 
 	public Springies(String object, String environment) {
 		int height = 480;
@@ -75,21 +79,21 @@ public class Springies extends JGEngine {
 		// Initialize Objects
 		FixedParser fixed = new FixedParser();
 		MassParser mass = new MassParser();
-		MuscleParser muscle = new MuscleParser();
-		SpringParser spring = new SpringParser();
+		MuscleParser muscle = new MuscleParser(masses, fixedMasses);
+		SpringParser spring = new SpringParser(masses, fixedMasses);
 
-		fixedMasses = fixed.createFixedMasses(object);
-		masses = mass.createMasses(object);
-		muscle.createMuscles(object, masses, fixedMasses);
-		spring.createSprings(object, masses, fixedMasses);
+		fixedMasses = (List<FixedMass>)(List<?>) fixed.readFile(object);
+		masses =  (List<Mass>)(List<?>) mass.readFile(object);
+		muscles = (List<Muscle>)(List<?>) muscle.readFile(object);
+		springs = (List<Spring>)(List<?>)spring.readFile(object);
 
 		// Initialize Environment Forces (Vectors need to be passed into Mass'
 		// move)
 		EnvironmentParser environment = new EnvironmentParser();
 		// environment.readGravity(environmentString);
-		viscMag = environment.readViscosity(environmentString);
-		comList = environment.readCOM(environmentString);
-		wallList = environment.readWall(environmentString);
+		viscMag = (List<Double>)(List<?>) environment.readFile(environmentString);
+		comList = (List<Double>)(List<?>) environment.readFile(environmentString);
+		wallList = (List<List<Double>>) (List<?>) environment.readFile(environmentString);
 
 
 	}
