@@ -1,7 +1,5 @@
 package simulation;
 
-import forces.Viscosity;
-
 import org.jbox2d.common.Vec2;
 
 import jboxGlue.PhysicalObjectCircle;
@@ -38,8 +36,8 @@ public class Mass extends PhysicalObjectCircle {
 	public String getID() {
 		return this.id;
 	}
-	
-	public double getMass(){
+
+	public double getMass() {
 		return this.mass;
 	}
 
@@ -66,27 +64,18 @@ public class Mass extends PhysicalObjectCircle {
 			remove();
 			return;
 		}
-		
+
 		// copy the position and rotation from the JBox world to the JGame world
 		Vec2 position = myBody.getPosition();
-		 this.x = position.x;
-		 this.y = position.y;
+		this.x = position.x;
+		this.y = position.y;
 		myRotation = -myBody.getAngle();
-		
-		// initialize environment forces
 
-		//initViscosity();
-		
 	}
-//
-//	public Vec2 getVelocity() {
-//		Vec2 velocity = myBody.getLinearVelocity();
-//		return velocity;
-//	}
-//
-//	private void initViscosity() {
-//		myBody.setLinearVelocity(Viscosity.setViscosity(this, 0.95));
-//	}
-	
+
+	public Vec2 getVelocity() {
+		Vec2 velocity = myBody.getLinearVelocity();
+		return velocity;
+	}
 
 }

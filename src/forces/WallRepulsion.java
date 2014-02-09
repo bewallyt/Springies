@@ -67,7 +67,7 @@ public class WallRepulsion extends Force{
 		}
 
 
-	 public Vec2 deriveForce (Mass m, Dimension bounds) {
+	 public Vec2 obtainForce (Mass m, Dimension bounds) {
 		 double dis = calcDistance(m, bounds);
 		 double angle = calcAngle();
 		 return super.deriveForce(mag, exp, angle, dis);

@@ -1,5 +1,8 @@
 package springies;
 
+import forces.CenterOfMass;
+import forces.Viscosity;
+import forces.WallRepulsion;
 import initialize.EnvironmentParser;
 import initialize.FixedParser;
 import initialize.MassParser;
@@ -29,24 +32,31 @@ import simulation.Mass;
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
-	
+
 	public static final Dimension SIZE = new Dimension(800, 600);
 	public static final String TITLE = "Springies!";
+	
 	private String object;
 	private String environmentString;
+	private List<Double> comList;
+	private List<List<Double>> wallList;
+	private List<FixedMass> fixedMasses;
+	private List<Mass> masses;
+	private double viscMag;
 
 	public Springies(String object, String environment) {
 		int height = 480;
 		double aspect = 16.0 / 9.0;
 		initEngineComponent((int) (height * aspect), height);
-		
+
 		this.object = object;
 		this.environmentString = environment;
 	}
 
 	@Override
 	public void initCanvas() {
-		setCanvasSettings(1, 1, displayWidth(),displayHeight(),null,null,null); 
+		setCanvasSettings(1, 1, displayWidth(), displayHeight(), null, null,
+				null);
 	}
 
 	@Override
@@ -59,34 +69,35 @@ public class Springies extends JGEngine {
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
 		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
-		//addBall();
+		// addBall();
 		addWalls();
-		
+
 		// Initialize Objects
 		FixedParser fixed = new FixedParser();
 		MassParser mass = new MassParser();
 		MuscleParser muscle = new MuscleParser();
 		SpringParser spring = new SpringParser();
 
-		List<FixedMass> fixedMasses = fixed.createFixedMasses(object);
-		List<Mass> masses = mass.createMasses(object);
+		fixedMasses = fixed.createFixedMasses(object);
+		masses = mass.createMasses(object);
 		muscle.createMuscles(object, masses, fixedMasses);
 		spring.createSprings(object, masses, fixedMasses);
-		
-		// Initialize Environment Forces (Vectors need to be passed into Mass' move)
+
+		// Initialize Environment Forces (Vectors need to be passed into Mass'
+		// move)
 		EnvironmentParser environment = new EnvironmentParser();
-		environment.readGravity(environmentString);
-		environment.readViscosity(environmentString);
-		environment.readCOM(environmentString);
-		environment.readWall(environmentString);
-		
+		// environment.readGravity(environmentString);
+		viscMag = environment.readViscosity(environmentString);
+		comList = environment.readCOM(environmentString);
+		wallList = environment.readWall(environmentString);
 
 	}
 
 	public void addBall() {
 		// add a bouncy ball
 		// NOTE: you could make this into a separate class, but I'm lazy
-		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,10, 5);
+		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,
+				10, 5);
 		{
 			// @Override
 			// public void hit(JGObject other) {
@@ -103,7 +114,8 @@ public class Springies extends JGEngine {
 			// // apply the change
 			// myBody.setLinearVelocity(velocity);
 			// }
-		};
+		}
+		;
 		ball.setPos(285, 190);
 
 		// ball.setForce(8000, -10000);
@@ -113,18 +125,14 @@ public class Springies extends JGEngine {
 	/**
 	 * Instantiate objects from XML files below.
 	 */
-	
 
-	
-//	public double[] applyCenterForce(ArrayList<Mass> massesCenter){
-//		
-//		return CenterOfMass.centerForce(massesCenter);
-//		
-//	}
-//
+	// public double[] applyCenterForce(ArrayList<Mass> massesCenter){
+	//
+	// return CenterOfMass.centerForce(massesCenter);
+	//
+	// }
+	//
 
-
-	
 	private void addWalls() {
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
@@ -155,21 +163,50 @@ public class Springies extends JGEngine {
 		// createSprings();
 		moveObjects();
 		checkCollision(1 + 2, 1);
-
-//		for (Mass m : massesCenter) {
-//			m.setForce(applyCenterForce(massesCenter)[0],applyCenterForce(massesCenter)[1]);
-//
-//		}
-
 		
+		//apple COM & Wall Repulsion & Viscosity
+		CenterOfMass com = new CenterOfMass(comList.get(0), comList.get(1));
+
+		WallRepulsion wr0 = new WallRepulsion(1, wallList
+				.get(0).get(1), wallList.get(0).get(2));
+
+		WallRepulsion wr1 = new WallRepulsion(2, wallList
+				.get(1).get(1), wallList.get(1).get(2));
+
+		WallRepulsion wr2 = new WallRepulsion(3, wallList
+				.get(2).get(1), wallList.get(2).get(2));
+
+		WallRepulsion wr3 = new WallRepulsion(4, wallList
+				.get(3).get(1), wallList.get(3).get(2));
+		
+		Viscosity visc = new Viscosity(viscMag);
+		
+
+		for (Mass m : masses) {
+			
+			Vec2 comForce = com.obtainForce(m);
+			m.setForce(comForce.x, comForce.y);
+			visc.setViscosity(m.getVelocity());
+			
+			Vec2 wallForce0 = wr0.obtainForce(m, SIZE);
+			Vec2 wallForce1 = wr1.obtainForce(m, SIZE);
+			Vec2 wallForce2 = wr2.obtainForce(m, SIZE);
+			Vec2 wallForce3 = wr3.obtainForce(m, SIZE);
+			m.setForce(wallForce0.x*90, wallForce0.y*90);
+			m.setForce(wallForce1.x*90, wallForce1.y*90);
+			m.setForce(wallForce2.x*90, wallForce2.y*90);
+			m.setForce(wallForce3.x*90, wallForce3.y*90);
+		}
+
+
 
 	}
 
 	@Override
 	public void paintFrame() {
 	}
-	
-	public static void createSpringies(String object, String environment){
+
+	public static void createSpringies(String object, String environment) {
 		final Springies sp = new Springies(object, environment);
 		JButton jb = new JButton("Make new Ball");
 
@@ -185,12 +222,9 @@ public class Springies extends JGEngine {
 		frame.getContentPane().add(sp, BorderLayout.CENTER);
 		frame.getContentPane().add(jb, BorderLayout.SOUTH);
 		frame.pack();
-		
+
 		frame.setVisible(true);
-		
-		
-		
+
 	}
-	
 
 }

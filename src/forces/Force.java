@@ -25,8 +25,5 @@ public class Force {
 		return(new Vec2(xForce, yForce));	
 	}
 	
-//	public Vec2 totalForce(){
-//		CenterOfMass com = new CenterOfMass()
-//	}
-//	
+	
 }

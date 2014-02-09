@@ -1,16 +1,19 @@
 package forces;
 
 import org.jbox2d.common.Vec2;
-import simulation.Mass;
 
-public class Viscosity{
+public class Viscosity {
 
-	public Vec2 setViscosity(Mass m,double magnitude){
-	Vec2 linearVelocity = m.getVelocity();
-		linearVelocity.x *= magnitude;
-		linearVelocity.y *= magnitude;
-		return linearVelocity;
+	private double mag;
+
+	public Viscosity(double mag) {
+		this.mag = mag;
 	}
 
+	public Vec2 setViscosity(Vec2 velocity) {
+		velocity.x *= mag;
+		velocity.y *= mag;
+		return velocity;
+	}
 
 }

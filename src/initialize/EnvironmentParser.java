@@ -134,9 +134,9 @@ public class EnvironmentParser {
 
 	}
 
-	public List<List<Object>> readWall(String xmlFile) {
+	public List<List<Double>> readWall(String xmlFile) {
 
-		List<List<Object>> wallList = new ArrayList<List<Object>>();
+		List<List<Double>> wallList = new ArrayList<List<Double>>();
 
 		try {
 
@@ -156,7 +156,7 @@ public class EnvironmentParser {
 			NodeList nodes = doc.getElementsByTagName("wall");
 
 			for (int i = 0; i < nodes.getLength(); i++) {
-				ArrayList<Object> nestedWallList = new ArrayList<Object>();
+				ArrayList<Double> nestedWallList = new ArrayList<Double>();
 				Node node = nodes.item(i);
 
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
