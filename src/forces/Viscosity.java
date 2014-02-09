@@ -1,15 +1,13 @@
 package forces;
 
-import java.util.List;
-
 import org.jbox2d.common.Vec2;
 
 public class Viscosity {
 
-	private Double mag;
+	private double mag;
 
-	public Viscosity(List<Double> viscMag) {
-		this.mag = viscMag.get(0);
+	public Viscosity(double viscMag) {
+		this.mag = viscMag;
 	}
 
 	public Vec2 setViscosity(Vec2 velocity) {

@@ -1,13 +1,19 @@
 package initialize2;
 
-import java.util.Arrays;
-
 public class ViscosityParser extends EnvironmentParser	{
 	
 	public ViscosityParser()	{
 		myObjectType = "viscosity";
 		String[] attributeArray = {"magnitude"};
-		myAttributes = Arrays.asList(attributeArray);
+		for(String str:attributeArray){
+			myAttributes.add(str);
+		}
+	}
+	
+	/*There is only one value for viscosity*/
+	public double returnViscosity(String xml){
+		readFile(xml);
+		return objects.get(0);
 	}
 
 }

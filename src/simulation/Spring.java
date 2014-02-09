@@ -46,4 +46,8 @@ public class Spring extends PhysicalObject {
 		myMass2.setForce(-xComp, -yComp);
 	}
 
+	public String toString()	{
+		return myMass1 + " " + myMass2 + " rl:" + myRestLength + 
+				" K:" + mySpringyness;
+	}
 }

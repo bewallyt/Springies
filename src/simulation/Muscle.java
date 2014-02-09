@@ -47,4 +47,8 @@ public class Muscle extends Spring {
 		myMass2.setForce(-xComp, -yComp);
 	}
 
+	public String toString()	{
+		return myMass1 + " " + myMass2 + " rl:" + myRestLength + 
+				" K:" + mySpringyness + " amp:" + myAmplitude;
+	}
 }

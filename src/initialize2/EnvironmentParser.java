@@ -8,27 +8,25 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class EnvironmentParser extends AbstractParser{
+	
+	protected List<Double> objects;
+	
 	@Override
-	public List<Object> getObjects(NodeList nodes) {
-		List<Object> objects = new ArrayList<Object>();
+	public void getObjects(NodeList nodes) {
+		objects = new ArrayList<Double>();
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node node = nodes.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element element = (Element) node;
 				for(String att:myAttributes){
-					objects.add(element.getAttribute(att));
+					objects.add(Double.parseDouble(element.getAttribute(att)));
 				}
 			}
 
 		}
-		return objects;
 	}
 	
 	/*Shouldn't execute this code for gravity*/
 	@Override
-	void getDefaultValue(String att, ArrayList<Object> data) {}
-	
-	/*Shouldn't execute this code for gravity*/
-	@Override
-	void addObject(ArrayList<Object> data, List<Object> objects) {}
+	void getDefaultValue(String att, ArrayList<String> data) {}
 }
