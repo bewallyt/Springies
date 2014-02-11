@@ -54,6 +54,7 @@ public class Spring extends PhysicalObject {
 
 	public void springForce() {
 
+<<<<<<< HEAD
 		dx = myMass2.getMassX() - myMass1.getMassX();
 		dy = myMass2.getMassY() - myMass1.getMassY();
 		dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -62,6 +63,16 @@ public class Spring extends PhysicalObject {
 		xComp = dx / dist * magnitude;
 		yComp = dy / dist * magnitude;
 
+=======
+		double dx = myMass2.getMassX() - myMass1.getMassX();
+		double dy = myMass2.getMassY() - myMass1.getMassY();
+		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+		double magnitude = mySpringyness * (dist - myRestLength); //Daintywalker
+		//double magnitude = mySpringyness * (dist - myRestLength) * 1800; //Ball
+		double xComp = dx / dist * magnitude;
+		double yComp = dy / dist * magnitude;
+
+>>>>>>> 77e876985b0248f153a80be14a2415126c75727f
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
 	}

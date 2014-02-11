@@ -25,7 +25,7 @@ public class Muscle extends Spring {
 	protected void paintShape() {
 		if (clear != 1) {
 			radian += .1;
-			myEngine.setColor(JGColor.green);
+			myEngine.setColor(JGColor.red);
 			myEngine.drawLine(myMass1.getMassX(), myMass1.getMassY(),
 					myMass2.getMassX(), myMass2.getMassY());
 			muscleForce();
@@ -33,12 +33,16 @@ public class Muscle extends Spring {
 	}
 
 	public void muscleForce() {
+		double tempRestLength = myRestLength + myAmplitude*Math.sin(radian)*5;
 		double dx = myMass2.getMassX() - myMass1.getMassX();
 		double dy = myMass2.getMassY() - myMass1.getMassY();
 		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-		double sinForce = Math.sin(radian) * 250 * myAmplitude;
-		double magnitude = (mySpringyness * (dist - myRestLength) * 4)
-				+ sinForce;
+//		double sinForce = Math.sin(radian) * 250 * myAmplitude;
+//		double magnitude = (mySpringyness * (dist - myRestLength) * 70) +
+//				sinForce;
+//		double magnitude = (mySpringyness * (dist - myRestLength) * 4)
+//				+ sinForce;
+		double magnitude = mySpringyness * (dist - tempRestLength);
 		double xComp = dx / dist * magnitude;
 		double yComp = dy / dist * magnitude;
 
