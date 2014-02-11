@@ -51,7 +51,12 @@ public class Springies extends JGEngine {
 	private boolean isTopWallOn = false;
 	private boolean isBottomWallOn = false;
 	private boolean isCOMOn = false;
-
+	
+	private boolean mouseMassCreated = false;
+	private Mass mouseMass;
+	private Mass closest;
+	private Spring mouseSpring;
+	
 	private List<FixedMass> totalFixedMasses = new ArrayList<FixedMass>();
 	private List<Mass> totalMasses = new ArrayList<Mass>();
 	private List<Muscle> totalMuscles = new ArrayList<Muscle>();
@@ -177,8 +182,8 @@ public class Springies extends JGEngine {
 		// update game objects
 
 		// createSprings();
+		mouseAction();
 		toggleForces();
-		toggleBoundaries(getLastKey());
 		moveObjects();
 		checkCollision(1 + 2, 1);
 		// initForces(masses);
@@ -198,8 +203,8 @@ public class Springies extends JGEngine {
 		drawString("4: " + (isLeftWallOn),20,200,-1);
 		drawString("-: " + (getKey('-')),20,230,-1);
 		drawString("=: " + (getKey('=')),20,260,-1);
-		drawString("Up: " + (getLastKey() == KeyEvent.VK_UP),20,290,-1);
-		drawString("Down: " + (getLastKey() == KeyEvent.VK_DOWN),20,320,-1);
+		drawString("Up: " + (getKey(KeyEvent.VK_UP)),20,290,-1);
+		drawString("Down: " + (getKey(KeyEvent.VK_DOWN)),20,320,-1);
 	}
 
 	public void initForces(List<Mass> masses) {
@@ -321,11 +326,48 @@ public class Springies extends JGEngine {
 
 	}
 	
+	public void mouseAction()	{
+		if(getMouseButton(1) && totalMasses.size()>0)	{
+			if(!mouseMassCreated)	{
+				mouseMass = new Mass("mouseMass",getMousePos().x,getMousePos().y,0,0,0);
+				closest = closestMass(mouseMass);
+				double dist = getDist(mouseMass,closest);
+				mouseSpring = new Spring(mouseMass,closest,dist,.5);
+				mouseMassCreated = true;
+			}
+			else	{
+				mouseMass.setPos(getMousePos().x,getMousePos().y);
+			}
+		}
+		if(!getMouseButton(1) && mouseMassCreated)	{
+			mouseSpring.terminate();
+			mouseMass.remove();
+			mouseMassCreated = false;
+		}
+		
+	}
+	
+	public Mass closestMass(Mass m1){
+		Mass closest = totalMasses.get(0);
+		for(Mass m : totalMasses)	{
+			if(getDist(m1,m) < getDist(m1,closest)){
+				closest = m;
+			}
+		}
+		return closest;
+	}
+	
+	public double getDist(Mass m1, Mass m2)	{
+		double dx = m2.getMassX() - m1.getMassX();
+		double dy = m2.getMassY() - m1.getMassY();
+		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+		return dist;
+	}
+	
 	public void toggleForces()	{
 		//Toggle Gravity
 		if(getKey('G'))	{
 			isGravityOn = !isGravityOn;
-			
 		}
 		//Toggle Viscosity
 		if(getKey('V'))	{
@@ -359,14 +401,11 @@ public class Springies extends JGEngine {
 				m.increaseAmp();
 			}
 		}
-		clearLastKey();
-	}
-	
-	public void toggleBoundaries(int keyEvent)	{
-		if(keyEvent == KeyEvent.VK_UP)	{
+		//Toggle Boundaries
+		if(getKey(KeyEvent.VK_UP))	{
 			
 		}
-		else if(keyEvent == KeyEvent.VK_DOWN)	{
+		if(getKey(KeyEvent.VK_DOWN))	{
 			
 		}
 		clearLastKey();

@@ -10,11 +10,12 @@ public class Mass extends PhysicalObjectCircle {
 
 	private String id;
 	private double mass;
+	private static double MASS_RADIUS = 5;
 
 	/* Constructor */
-	public Mass(String id, double radius, double xCoord, double yCoord,
+	public Mass(String id, double xCoord, double yCoord,
 			double mass, double xv, double yv) {
-		super(id, 0, JGColor.blue, radius, mass);
+		super(id, 0, JGColor.blue, MASS_RADIUS, mass);
 
 		this.id = id;
 		this.x = xCoord;
@@ -40,23 +41,6 @@ public class Mass extends PhysicalObjectCircle {
 	public double getMass() {
 		return this.mass;
 	}
-
-	// int prevmousex = 0, prevmousey = 0;
-
-	// public void move() {
-	// if (myEngine.getMouseButton(1)
-	// && (myEngine.getMouseX() >= x - massWidth * 2 && myEngine
-	// .getMouseX() <= x + massWidth * 2)
-	// && (myEngine.getMouseY() >= y - massHeight * 2 && myEngine
-	// .getMouseY() <= y + massHeight * 2)) {
-	// x = myEngine.getMouseX() - massWidth / 2;
-	// y = myEngine.getMouseY() - massHeight / 2;
-	// xspeed = (x - prevmousex) / 10;
-	// yspeed = (y - prevmousey) / 10;
-	// prevmousex = myEngine.getMouseX();
-	// prevmousey = myEngine.getMouseY();
-	// }
-	// }
 
 	public void move() {
 		// if the JGame object was deleted, remove the physical object too
