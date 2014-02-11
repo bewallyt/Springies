@@ -20,10 +20,6 @@ public class Muscle extends Spring {
 		myAmplitude = amp;
 	}
 
-	public void move() {
-
-	}
-
 	@Override
 	protected void paintShape() {
 		radian += .1;
@@ -34,21 +30,18 @@ public class Muscle extends Spring {
 	}
 
 	public void muscleForce() {
+		double newRestLength = myRestLength + myAmplitude*Math.sin(radian);
 		double dx = myMass2.getMassX() - myMass1.getMassX();
 		double dy = myMass2.getMassY() - myMass1.getMassY();
 		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-		double sinForce = Math.sin(radian) * 250 * myAmplitude;
-		double magnitude = (mySpringyness * (dist - myRestLength) * 8)
-				+ sinForce;
-		//double magnitude = (mySpringyness * (dist - myRestLength) * 70) + sinForce;
-		double xComp = dx / dist * magnitude;
-		double yComp = dy / dist * magnitude;
+//		double sinForce = Math.sin(radian) * 250 * myAmplitude;
+//		double magnitude = (mySpringyness * (dist - myRestLength) * 8)
+//				+ sinForce;
+//		double xComp = dx / dist * magnitude;
+//		double yComp = dy / dist * magnitude;
+		double xComp = mySpringyness*(dist-newRestLength)*dx/dist;
+		double yComp = mySpringyness*(dist-newRestLength)*dy/dist;
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
-	}
-
-	public String toString()	{
-		return myMass1 + " " + myMass2 + " rl:" + myRestLength + 
-				" K:" + mySpringyness + " amp:" + myAmplitude;
 	}
 }
