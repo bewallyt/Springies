@@ -4,18 +4,31 @@ Springies
 A few things to note:
 
 1. Everything should be implemented. 
+     
       "G"   --> toggles gravity
+
       "V"   --> toggles viscosity
+      
       "M"   --> toggles center of mass
+      
       "1"   --> toggles top wall repulsion
+      
       "2"   --> toggles right wall repulsion
+      
       "3"   --> toggles bottom wall repulsion
+      
       "4"   --> toggles left wall repulsion
+      
       "-"   --> decreases muscle amplitude
+      
       "="   --> increases muscle amplitude
+      
       "UP"  --> increases boundary
+      
       "DOWN"--> decreases boundary
+      
       "N"   --> generates new assembly
+      
       "C"   --> clears all assemblies
 
 
