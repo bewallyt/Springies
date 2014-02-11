@@ -1,12 +1,14 @@
 package springies;
 
 import forces.CenterOfMass;
+import forces.Gravity;
 import forces.Viscosity;
 import forces.WallRepulsion;
 import initialize.AssemblyFileChooser;
 import initialize.COMParser;
 import initialize.EnvironmentParser;
 import initialize.FixedParser;
+import initialize.GravityParser;
 import initialize.MassParser;
 import initialize.MuscleParser;
 import initialize.SpringParser;
@@ -20,10 +22,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import jboxGlue.PhysicalObject;
-import jboxGlue.PhysicalObjectRect;
+
 import jboxGlue.WorldManager;
-import jgame.JGColor;
 import jgame.platform.JGEngine;
 
 import org.jbox2d.common.Vec2;
@@ -32,6 +32,7 @@ import simulation.FixedMass;
 import simulation.Mass;
 import simulation.Muscle;
 import simulation.Spring;
+import simulation.WallSetup;
 
 @SuppressWarnings("serial")
 public class Springies extends JGEngine {
@@ -41,12 +42,14 @@ public class Springies extends JGEngine {
 
 	private String environmentString;
 	private List<Double> comList;
+	private List<Double> gravityList;
 	private List<List<Double>> wallList;
 
 	private List<FixedMass> totalFixedMasses = new ArrayList<FixedMass>();
 	private List<Mass> totalMasses = new ArrayList<Mass>();
 	private List<Muscle> totalMuscles = new ArrayList<Muscle>();
 	private List<Spring> totalSprings = new ArrayList<Spring>();
+	private List<WallSetup> totalWalls = new ArrayList<WallSetup>();
 
 	private double viscMag;
 
@@ -75,20 +78,47 @@ public class Springies extends JGEngine {
 		// so gravity is up in world coords and down in game coords
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
-		//WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
 		addWalls();
+		// WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
 
 		// Initialize Environment Forces (Vectors need to be passed into Mass'
 		// move)
 		EnvironmentParser environment = new EnvironmentParser();
-		// environment.readGravity(environmentString);
 		ViscosityParser visc = new ViscosityParser();
 		COMParser com = new COMParser();
 		WallParser wall = new WallParser();
+		GravityParser grav = new GravityParser();
+		
 		viscMag = visc.returnViscosity(environmentString);
 		comList = com.returnCOM(environmentString);
 		wallList = wall.returnWalls(environmentString);
+		gravityList = grav.returnGravity(environmentString);
 
+	}
+	
+	private void addWalls ()
+	{
+		// add walls to bounce off of
+		// NOTE: immovable objects must have no mass
+		final double WALL_MARGIN = 10;
+		final double WALL_THICKNESS = 10;
+		final double WALL_WIDTH = displayWidth() - WALL_MARGIN * 2 + WALL_THICKNESS;
+		final double WALL_HEIGHT = displayHeight() - WALL_MARGIN * 2 + WALL_THICKNESS;
+		WallSetup wall = new WallSetup("top", WALL_WIDTH, WALL_THICKNESS);
+		wall.setPos(displayWidth() / 2, WALL_MARGIN);
+		totalWalls.add(wall);
+
+		wall = new WallSetup ("bottom",WALL_WIDTH, WALL_THICKNESS);
+		wall.setPos(displayWidth() / 2, displayHeight() - WALL_MARGIN);
+		totalWalls.add(wall);
+
+		wall = new WallSetup ("left",WALL_THICKNESS, WALL_HEIGHT);
+		wall.setPos(WALL_MARGIN, displayHeight() / 2);
+		totalWalls.add(wall);
+
+		wall = new WallSetup("right",WALL_THICKNESS, WALL_HEIGHT);
+		wall.setPos(displayWidth() - WALL_MARGIN, displayHeight() / 2);
+		totalWalls.add(wall);
 	}
 
 	/**
@@ -114,29 +144,6 @@ public class Springies extends JGEngine {
 	 * Instantiate objects from XML files below.
 	 */
 
-	private void addWalls() {
-		// add walls to bounce off of
-		// NOTE: immovable objects must have no mass
-		final double WALL_MARGIN = 10;
-		final double WALL_THICKNESS = 10;
-		final double WALL_WIDTH = displayWidth() - WALL_MARGIN * 2
-				+ WALL_THICKNESS;
-		final double WALL_HEIGHT = displayHeight() - WALL_MARGIN * 2
-				+ WALL_THICKNESS;
-		PhysicalObject wall = new PhysicalObjectRect("wall", 2, JGColor.green,
-				WALL_WIDTH, WALL_THICKNESS);
-		wall.setPos(displayWidth() / 2, WALL_MARGIN);
-		wall = new PhysicalObjectRect("wall", 2, JGColor.green, WALL_WIDTH,
-				WALL_THICKNESS);
-		wall.setPos(displayWidth() / 2, displayHeight() - WALL_MARGIN);
-		wall = new PhysicalObjectRect("wall", 2, JGColor.green, WALL_THICKNESS,
-				WALL_HEIGHT);
-		wall.setPos(WALL_MARGIN, displayHeight() / 2);
-		wall = new PhysicalObjectRect("wall", 2, JGColor.green, WALL_THICKNESS,
-				WALL_HEIGHT);
-		wall.setPos(displayWidth() - WALL_MARGIN, displayHeight() / 2);
-	}
-
 	@Override
 	public void doFrame() {
 
@@ -157,10 +164,19 @@ public class Springies extends JGEngine {
 		if (getKey('C')) {
 			clearKey('C');
 			clearAssembly();
-			
+
 		}
 		
-		if(totalMasses.size() != 0){
+		if (getKey('Z')) {
+			for(WallSetup ws : totalWalls){
+				ws.increaseWall();
+			}
+			clearKey('Z');
+			
+
+		}
+
+		if (totalMasses.size() != 0) {
 			initForces(totalMasses);
 		}
 
@@ -176,7 +192,7 @@ public class Springies extends JGEngine {
 
 	@Override
 	public void paintFrame() {
-		
+
 	}
 
 	public void initForces(List<Mass> masses) {
@@ -194,10 +210,16 @@ public class Springies extends JGEngine {
 
 		WallRepulsion wr3 = new WallRepulsion(4, wallList.get(3).get(1),
 				wallList.get(3).get(2));
-
+		
+		Gravity grav = new Gravity(gravityList.get(0), gravityList.get(1));
+		
 		Viscosity visc = new Viscosity(viscMag);
 
 		for (Mass m : masses) {
+			
+
+			//m.setForce(grav.applyGravity(m).x, grav.applyGravity(m).y);
+			
 
 			Vec2 comForce = com.obtainForce(m);
 			m.setForce(comForce.x, comForce.y);
@@ -233,8 +255,6 @@ public class Springies extends JGEngine {
 		SpringParser spring = new SpringParser(masses, fixedmasses);
 		muscles = muscle.returnMuscles(assembly);
 		springs = spring.returnSprings(assembly);
-		
-		
 
 		for (Mass m : masses) {
 			totalMasses.add(m);
@@ -242,33 +262,32 @@ public class Springies extends JGEngine {
 		for (FixedMass fm : fixedmasses) {
 			totalFixedMasses.add(fm);
 		}
-//		for (Muscle mu : muscles) {
-//			totalMuscles.add(mu);
-//		}
+		for (Muscle mu : muscles) {
+			totalMuscles.add(mu);
+		}
 		for (Spring s : springs) {
 			totalSprings.add(s);
 		}
 	}
 
 	public void clearAssembly() {
-		
+
 		for (Spring s : totalSprings) {
 			s.terminate();
 		}
-		
+		for (Muscle mu : totalMuscles) {
+			mu.terminate();
+		}
 		for (Mass m : totalMasses) {
 			m.remove();
 		}
 		for (FixedMass fm : totalFixedMasses) {
 			fm.remove();
 		}
-//		for (Muscle mu : totalMuscles) {
-//			mu.remove();
-//		}
 
 		totalFixedMasses.clear();
 		totalMasses.clear();
-//		totalMuscles.clear();
+		totalMuscles.clear();
 		totalSprings.clear();
 	}
 
