@@ -10,16 +10,16 @@ public class Force {
 		float xForce;
 		
 		if (exp > 0) {
-			yForce = (float) (mag * (Math.pow(dis, exp * -1)) * Math.sin(ang));
-			xForce = (float) (mag * (Math.pow(dis, exp * -1)) * Math.cos(ang));
+			yForce = (float) (mag * (Math.pow(dis, exp * -2)) * Math.sin(ang));
+			xForce = (float) (mag * (Math.pow(dis, exp * -2)) * Math.cos(ang));
 			
 		} else if (exp == 0) {
 			yForce = (float) (mag * Math.sin(ang));
 			xForce = (float) (mag * Math.cos(ang));
 			
 		} else{
-			yForce = (float) (mag * (Math.pow(dis, exp * -1)) * Math.sin(ang));
-			xForce = (float) (mag * (Math.pow(dis, exp * -1)) * Math.cos(ang));		
+			yForce = (float) (mag * (Math.pow(dis, exp * -2)) * Math.sin(ang));
+			xForce = (float) (mag * (Math.pow(dis, exp * -2)) * Math.cos(ang));		
 		}
 		
 		return(new Vec2(xForce, yForce));	

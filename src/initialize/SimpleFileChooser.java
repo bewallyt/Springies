@@ -13,12 +13,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import springies.Springies;
 
 public class SimpleFileChooser extends JFrame {
-	
+
 	private String environmentString;
 
-	public String getEnvironmentString() {
-		return environmentString;
-	}
 
 	public SimpleFileChooser() {
 
@@ -29,30 +26,9 @@ public class SimpleFileChooser extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
-//		JButton openButtonObject = new JButton("Open Object");
 		JButton openButtonEnvironment = new JButton("Open Environment");
 		JButton openButtonFinish = new JButton("Done");
-//		final JLabel statusbarObject = new JLabel("Select XML files");
-		final JLabel statusbarEnvironment = new JLabel("Select XML file");
-
-		// Create a file chooser that opens up as an Open dialog
-//		openButtonObject.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent ae) {
-//				JFileChooser chooser = new JFileChooser();
-//				chooser.setCurrentDirectory(new File("."));
-//
-//				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-//						"XML", "xml");
-//				chooser.setFileFilter(filter);
-//
-//				int option = chooser.showOpenDialog(SimpleFileChooser.this);
-//				if (option == JFileChooser.APPROVE_OPTION) {
-//					File sf = chooser.getSelectedFile();
-//					assemblyString = sf.getName();
-//					statusbarObject.setText("You chose " + sf.getName());
-//				}
-//			}
-//		});
+		final JLabel statusbarEnvironment = new JLabel("Select XML files");
 
 		openButtonEnvironment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -76,16 +52,14 @@ public class SimpleFileChooser extends JFrame {
 
 		openButtonFinish.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {	
-				Springies.createSpringies(environmentString);
+				
 				close();		
-
+				Springies.createSpringies(environmentString);
 			}
 		});
-		
-		//c.add(openButtonObject);
+
 		c.add(openButtonEnvironment);
 		c.add(openButtonFinish);
-		//c.add(statusbarObject);
 		c.add(statusbarEnvironment);
 
 	}
