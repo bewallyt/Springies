@@ -81,11 +81,11 @@ public class Muscle extends PhysicalObject {
 	}
 
 	public void decreaseAmp() {
-		myAmplitude -= 30;
+		myAmplitude -= 2;
 	}
 
 	public void increaseAmp() {
-		myAmplitude += 30;
+		myAmplitude += 2;
 	}
 
 	public double getAmp() {

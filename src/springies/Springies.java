@@ -51,12 +51,12 @@ public class Springies extends JGEngine {
 	private boolean isTopWallOn = false;
 	private boolean isBottomWallOn = false;
 	private boolean isCOMOn = false;
-	
+
 	private boolean mouseMassCreated = false;
 	private Mass mouseMass;
 	private Mass closest;
 	private Spring mouseSpring;
-	
+
 	private List<FixedMass> totalFixedMasses = new ArrayList<FixedMass>();
 	private List<Mass> totalMasses = new ArrayList<Mass>();
 	private List<Muscle> totalMuscles = new ArrayList<Muscle>();
@@ -66,7 +66,7 @@ public class Springies extends JGEngine {
 	private double viscMag;
 
 	public Springies(String environment) {
-		int height = 600;
+		int height = 700;
 		double aspect = 16.0 / 9.0;
 		initEngineComponent((int) (height * aspect), height);
 
@@ -124,32 +124,22 @@ public class Springies extends JGEngine {
 
 	@Override
 	public void doFrame() {
-
 		WorldManager.getWorld().step(1f, 1);
-
 		/**
 		 * toggleAssembly(): "N" Opens File Chooser for Assembly. "C" Clears all
 		 * Assemblies toggleForces(): Toggles all environment forces, wall
 		 * repulsion/position, muscle amplitude. toggle statuses are displayed
 		 * via paintframe()
 		 */
-
 		toggleAssembly();
 		toggleForces();
-
 		if (totalMasses.size() != 0) {
 			initForces(totalMasses);
 		}
-
-		WorldManager.getWorld().step(1f, 1);
-
-		// createSprings();
 		mouseAction();
-
 		moveObjects();
 		checkCollision(1 + 2, 1);
 		clearLastKey();
-
 	}
 
 	@Override
@@ -165,7 +155,6 @@ public class Springies extends JGEngine {
 		drawString("=: " + (getKey('=')),20,260,-1);
 		drawString("Up: " + (getKey(KeyEvent.VK_UP)),20,290,-1);
 		drawString("Down: " + (getKey(KeyEvent.VK_DOWN)),20,320,-1);
-		
 		drawString("Press N for new assembly",200,20,-1);
 		drawString("Press C to clear assemblies",200,50,-1);
 	}
@@ -173,21 +162,15 @@ public class Springies extends JGEngine {
 	public void initForces(List<Mass> masses) {
 
 		CenterOfMass com = new CenterOfMass(comList.get(0), comList.get(1));
-
 		WallRepulsion wr0 = new WallRepulsion(1, wallList.get(0).get(1),
 				wallList.get(0).get(2));
-
 		WallRepulsion wr1 = new WallRepulsion(2, wallList.get(1).get(1),
 				wallList.get(1).get(2));
-
 		WallRepulsion wr2 = new WallRepulsion(3, wallList.get(2).get(1),
 				wallList.get(2).get(2));
-
 		WallRepulsion wr3 = new WallRepulsion(4, wallList.get(3).get(1),
 				wallList.get(3).get(2));
-
 		Gravity grav = new Gravity(gravityList.get(0), gravityList.get(1));
-
 		Viscosity visc = new Viscosity(viscMag);
 
 		for (Mass m : masses) {
@@ -202,26 +185,12 @@ public class Springies extends JGEngine {
 			}
 
 			Vec2 comForce = com.obtainForce(m);
-			if (isCOMOn) {
-				m.setForce(comForce.x, comForce.y);
-			}
-
-			if (isViscosityOn) {
-				visc.setViscosity(m.getVelocity());
-			}
-
-			if (isTopWallOn) {
-				m.setForce(wallForce0.x * 90, wallForce0.y * 90);
-			}
-			if (isRightWallOn) {
-				m.setForce(wallForce1.x * 90, wallForce1.y * 90);
-			}
-			if (isBottomWallOn) {
-				m.setForce(wallForce2.x * 90, wallForce2.y * 90);
-			}
-			if (isLeftWallOn) {
-				m.setForce(wallForce3.x * 90, wallForce3.y * 90);
-			}
+			if (isCOMOn) m.setForce(comForce.x, comForce.y);
+			if (isViscosityOn) visc.setViscosity(m.getVelocity());
+			if (isTopWallOn) m.setForce(wallForce0.x * 90, wallForce0.y * 90);
+			if (isRightWallOn) m.setForce(wallForce1.x * 90, wallForce1.y * 90);
+			if (isBottomWallOn) m.setForce(wallForce2.x * 90, wallForce2.y * 90);
+			if (isLeftWallOn) m.setForce(wallForce3.x * 90, wallForce3.y * 90);
 		}
 	}
 
@@ -293,11 +262,10 @@ public class Springies extends JGEngine {
 		if (getKey('C')) {
 			clearAssembly();
 			clearKey('C');
-
 		}
 
 	}
-	
+
 	public void mouseAction()	{
 		if(getMouseButton(1) && totalMasses.size()>0)	{
 			if(!mouseMassCreated)	{
@@ -316,24 +284,21 @@ public class Springies extends JGEngine {
 			mouseMass.remove();
 			mouseMassCreated = false;
 		}
-		
+
 	}
-	
+
 	public Mass closestMass(Mass m1){
 		Mass closest = totalMasses.get(0);
-		for(Mass m : totalMasses)	{
-			if(getDist(m1,m) < getDist(m1,closest)){
+		for(Mass m : totalMasses)
+			if(getDist(m1,m) < getDist(m1,closest))
 				closest = m;
-			}
-		}
 		return closest;
 	}
-	
+
 	public double getDist(Mass m1, Mass m2)	{
 		double dx = m2.getMassX() - m1.getMassX();
 		double dy = m2.getMassY() - m1.getMassY();
-		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-		return dist;
+		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 	}
 
 	public void toggleForces() {
@@ -371,48 +336,36 @@ public class Springies extends JGEngine {
 		}
 		// Toggle Muscle Amplitudes ('-' = decrease, '=' = increase)
 		if (getKey('-')) {
-			System.out.println("dfdasf");
 			for (Muscle m : totalMuscles) {
-				System.out.println(m.getAmp());
 				m.decreaseAmp();
-				System.out.println(m.getAmp());
 			}
 			clearKey('-');
 		}
 		if (getKey('=')) {
 			for (Muscle m : totalMuscles) {
-				System.out.println(m.getAmp());
 				m.increaseAmp();
-				System.out.println(m.getAmp());
 			}
 			clearKey('=');
 		}
-
-		clearLastKey();
 		// Change size of walled area
-
-		//Toggle Boundaries
 		if (getKey(KeyEvent.VK_UP)) {
-			for (WallSetup ws : totalWalls) {
+			for (WallSetup ws : totalWalls)
 				ws.changeWall(-10);
-			}
 			clearKey(KeyEvent.VK_UP);
 		}
 		if (getKey(KeyEvent.VK_DOWN)) {
-			for (WallSetup ws : totalWalls) {
+			for (WallSetup ws : totalWalls) 
 				ws.changeWall(10);
-			}
 			clearKey(KeyEvent.VK_DOWN);
 		}
 		clearLastKey();
 	}
-	
+
 	/**
 	 * createSpringies() is called in the FileChooser. 
 	 * Environment is the XML Environment string.
 	 */
 
-	
 	public static void createSpringies(String environment) {
 		final Springies sp = new Springies(environment);
 
@@ -422,7 +375,5 @@ public class Springies extends JGEngine {
 		frame.pack();
 
 		frame.setVisible(true);
-
 	}
-
 }
