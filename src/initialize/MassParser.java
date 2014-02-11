@@ -79,6 +79,8 @@ public class MassParser {
 							massList.get(0), massList.get(1), massList.get(4),
 							massList.get(2), massList.get(3));
 					
+					System.out.println("Mass #: " + element.getAttribute("id"));
+					
 					//Added 200 for ball.xml
 					tempMass.setPos(massList.get(0), massList.get(1) - 200);
 					//For Test

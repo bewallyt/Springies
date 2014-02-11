@@ -14,7 +14,6 @@ import springies.Springies;
 
 public class SimpleFileChooser extends JFrame {
 
-	private String objectString;
 	private String environmentString;
 
 
@@ -27,30 +26,9 @@ public class SimpleFileChooser extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
-		JButton openButtonObject = new JButton("Open Object");
 		JButton openButtonEnvironment = new JButton("Open Environment");
 		JButton openButtonFinish = new JButton("Done");
-		final JLabel statusbarObject = new JLabel("Select XML files");
-		final JLabel statusbarEnvironment = new JLabel("");
-
-		// Create a file chooser that opens up as an Open dialog
-		openButtonObject.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new File("."));
-
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"XML", "xml");
-				chooser.setFileFilter(filter);
-
-				int option = chooser.showOpenDialog(SimpleFileChooser.this);
-				if (option == JFileChooser.APPROVE_OPTION) {
-					File sf = chooser.getSelectedFile();
-					objectString = sf.getName();
-					statusbarObject.setText("You chose " + sf.getName());
-				}
-			}
-		});
+		final JLabel statusbarEnvironment = new JLabel("Select XML files");
 
 		openButtonEnvironment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
@@ -76,14 +54,12 @@ public class SimpleFileChooser extends JFrame {
 			public void actionPerformed(ActionEvent ae) {	
 				
 				close();		
-				Springies.createSpringies(objectString, environmentString);
+				Springies.createSpringies(environmentString);
 			}
 		});
-		
-		c.add(openButtonObject);
+
 		c.add(openButtonEnvironment);
 		c.add(openButtonFinish);
-		c.add(statusbarObject);
 		c.add(statusbarEnvironment);
 
 	}

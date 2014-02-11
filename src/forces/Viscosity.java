@@ -6,7 +6,11 @@ public class Viscosity {
 
 	private double mag;
 
-	public Viscosity(double viscMag) {
+//	public Viscosity(List<Double> viscMag) {
+//		this.mag = viscMag.get(0);
+//	}
+	
+	public Viscosity(Double viscMag) {
 		this.mag = viscMag;
 	}
 

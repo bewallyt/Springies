@@ -3,6 +3,7 @@ package springies;
 import forces.CenterOfMass;
 import forces.Viscosity;
 import forces.WallRepulsion;
+import initialize2.AssemblyFileChooser;
 import initialize2.COMParser;
 import initialize2.EnvironmentParser;
 import initialize2.FixedParser;
@@ -14,15 +15,12 @@ import initialize2.WallParser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import jboxGlue.PhysicalObject;
-import jboxGlue.PhysicalObjectCircle;
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
@@ -41,22 +39,23 @@ public class Springies extends JGEngine {
 	public static final Dimension SIZE = new Dimension(800, 600);
 	public static final String TITLE = "Springies!";
 
-	private String object;
 	private String environmentString;
 	private List<Double> comList;
 	private List<List<Double>> wallList;
-	private List<FixedMass> fixedMasses;
-	private List<Mass> masses;
-	private List<Spring> springs;
-	private List<Muscle> muscles;
+	
+	private List<List<FixedMass>> totalFixedMasses = new ArrayList<List<FixedMass>>();
+	private List<List<Mass>> totalMasses = new ArrayList<List<Mass>>();
+	private List<List<Muscle>> totalMuscles = new ArrayList<List<Muscle>>();
+	private List<List<Spring>> totalSprings = new ArrayList<List<Spring>>();
+
+
 	private double viscMag;
 
-	public Springies(String object, String environment) {
+	public Springies(String environment) {
 		int height = 480;
 		double aspect = 16.0 / 9.0;
 		initEngineComponent((int) (height * aspect), height);
 
-		this.object = object;
 		this.environmentString = environment;
 	}
 
@@ -64,10 +63,12 @@ public class Springies extends JGEngine {
 	public void initCanvas() {
 		setCanvasSettings(1, 1, displayWidth(), displayHeight(), null, null,
 				null);
+
 	}
 
 	@Override
 	public void initGame() {
+
 		setFrameRate(60, 2);
 		// NOTE:
 		// world coordinates have y pointing down
@@ -75,27 +76,10 @@ public class Springies extends JGEngine {
 		// so gravity is up in world coords and down in game coords
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
-		//WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
-		// addBall();
+		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
 		addWalls();
 
-		// Initialize Objects
-		FixedParser fixed = new FixedParser();
-		MassParser mass = new MassParser();
-		
-		//Remember how to cast: muscles = (List<Muscle>)(List<?>) muscle.readFile(object);
-		fixedMasses = fixed.returnFixedMasses(object);
-		System.out.println(fixedMasses);
-		masses =  mass.returnMasses(object);
-		System.out.println(masses);
-		
-		MuscleParser muscle = new MuscleParser(masses, fixedMasses);
-		SpringParser spring = new SpringParser(masses, fixedMasses);
 
-		muscles = muscle.returnMuscles(object);
-		System.out.println(muscles);
-		springs = spring.returnSprings(object);
-		System.out.println(springs);
 		// Initialize Environment Forces (Vectors need to be passed into Mass'
 		// move)
 		EnvironmentParser environment = new EnvironmentParser();
@@ -170,12 +154,42 @@ public class Springies extends JGEngine {
 
 	@Override
 	public void doFrame() {
-		// update game objects
+
+		if (getKey('N')) {
+			clearKey('N');
+			System.out.println("n pressed");
+			AssemblyFileChooser afc = new AssemblyFileChooser();
+			afc.setVisible(true);
+			try {
+				Thread.sleep(6000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			initAssembly(afc.getAssemblyString());
+			// initForces(afc.addAssemblies());
+		}
+
+		if (getKey('C')) {
+			clearKey('C');
+			clearAssembly();
+		}
+
 		WorldManager.getWorld().step(1f, 1);
+		// update game objects
+
 		// createSprings();
 		moveObjects();
 		checkCollision(1 + 2, 1);
+		// initForces(masses);
 
+	}
+
+	@Override
+	public void paintFrame() {
+	}
+
+	public void initForces(List<Mass> masses) {
 		// apple COM & Wall Repulsion & Viscosity
 		CenterOfMass com = new CenterOfMass(comList.get(0), comList.get(1));
 
@@ -208,28 +222,56 @@ public class Springies extends JGEngine {
 			m.setForce(wallForce2.x * 90, wallForce2.y * 90);
 			m.setForce(wallForce3.x * 90, wallForce3.y * 90);
 		}
-
 	}
 
-	@Override
-	public void paintFrame() {
+	public void initAssembly(String assembly) {
+
+		List<FixedMass> fixedmasses;
+		List<Mass> masses;
+		List<Muscle> muscles;
+		List<Spring> springs;
+		
+		
+		//Remember how to cast: muscles = (List<Muscle>)(List<?>) muscle.readFile(object);
+
+		FixedParser fixed = new FixedParser();
+		MassParser mass = new MassParser();
+		fixedmasses = fixed.returnFixedMasses(assembly);
+		masses = mass.returnMasses(assembly);
+		
+		MuscleParser muscle = new MuscleParser(masses, fixedmasses);
+		SpringParser spring = new SpringParser(masses, fixedmasses);
+		muscles = muscle.returnMuscles(assembly);
+		springs = spring.returnSprings(assembly);
+		
+
+		if (fixedmasses.size() != 0) {
+			totalFixedMasses.add(fixedmasses);
+		}
+		if (masses.size() != 0) {
+			totalMasses.add(masses);
+		}
+		if (muscles.size() != 0) {
+			totalMuscles.add(muscles);
+		}
+		if (springs.size() != 0) {
+			totalSprings.add(springs);
+		}
 	}
 
-	public static void createSpringies(String object, String environment) {
-		final Springies sp = new Springies(object, environment);
-		JButton jb = new JButton("Make new Ball");
+	public void clearAssembly() {
+		totalFixedMasses.clear();
+		totalMasses.clear();
+		totalMuscles.clear();
+		totalSprings.clear();
+	}
 
-		jb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
+	public static void createSpringies(String environment) {
+		final Springies sp = new Springies(environment);
 
 		JFrame frame = new JFrame(TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(sp, BorderLayout.CENTER);
-		frame.getContentPane().add(jb, BorderLayout.SOUTH);
 		frame.pack();
 
 		frame.setVisible(true);

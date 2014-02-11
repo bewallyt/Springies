@@ -39,6 +39,7 @@ public class Spring extends PhysicalObject {
 		double yComp = mySpringyness*(dist-myRestLength)*dy/dist;
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
+		
 	}
 	
 }
