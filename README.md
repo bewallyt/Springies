@@ -9,8 +9,11 @@ A few things to note:
 
 3. Different assemblies require different physics constants (moreso spring constants). For instance, the constants for ball.xml differ greatly from those of daintywalker.xml.
 
-4. ball.xml often is "zapped" off screen or requires multiple generations via "N" to have a decent run. The optimal magnitude for this assembly is: "magnitude = mySpringyness * (dist - myRestLength) * 1800;" This is nested inside "springForce()" within the Spring class.
+4. "ball.xml" often is "zapped" off screen or requires multiple generations via "N" to have a decent run. The optimal magnitude for this assembly is: "magnitude = mySpringyness * (dist - myRestLength) * 1800;" This is nested inside "springForce()" within the Spring class.
 
-5. daintywalker.xml: "double magnitude = mySpringyness * (dist - myRestLength);"
+5. "daintywalker.xml": "double magnitude = mySpringyness * (dist - myRestLength);"
+
+6. "environment2.xml" was created and used to test these assemblies.
+
 
   
