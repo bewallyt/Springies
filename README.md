@@ -1,7 +1,11 @@
-Springies
+**Springies**
 =========
+**Team Members:**
+---------
+In-Young Jo and Benson Tran
 
-A few things to note:
+**A few things to note:**
+---------
 
 1. Everything should be implemented. 
      
