@@ -15,6 +15,7 @@ import initialize2.WallParser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +49,18 @@ public class Springies extends JGEngine {
 	private List<List<Muscle>> totalMuscles = new ArrayList<List<Muscle>>();
 	private List<List<Spring>> totalSprings = new ArrayList<List<Spring>>();
 
+	private boolean isGravityOn = true;
+	private boolean isViscosityOn = true;
+	private boolean isRightWallOn = true;
+	private boolean isLeftWallOn = true;
+	private boolean isTopWallOn = true;
+	private boolean isBottomWallOn = true;
+	private boolean isCOMOn = true;
 
 	private double viscMag;
 
 	public Springies(String environment) {
-		int height = 480;
+		int height = 600;
 		double aspect = 16.0 / 9.0;
 		initEngineComponent((int) (height * aspect), height);
 
@@ -179,12 +187,14 @@ public class Springies extends JGEngine {
 		// update game objects
 
 		// createSprings();
+		
 		moveObjects();
 		checkCollision(1 + 2, 1);
 		// initForces(masses);
 
 	}
 
+	
 	@Override
 	public void paintFrame() {
 	}
@@ -276,6 +286,51 @@ public class Springies extends JGEngine {
 
 		frame.setVisible(true);
 
+	}
+	
+	public void toggleForces()	{
+		//Toggle Gravity
+		if(getKey('G'))	{
+			
+		}
+		//Toggle Viscosity
+		if(getKey('V'))	{
+			
+		}
+		//Toggle Center of Mass
+		if(getKey('M'))	{
+			
+		}
+		//Toggle Walls (1=Top,2=Right,3=Bottom,4=Left)
+		if(getKey('1'))	{
+			
+		}
+		if(getKey('2'))	{
+			
+		}
+		if(getKey('3'))	{
+			
+		}
+		if(getKey('4'))	{
+			
+		}
+		//Toggle Muscle Amplitudes ('-' = decrease, '=' = increase)
+		if(getKey('-'))	{
+			
+		}
+		if(getKey('='))	{
+			
+		}
+		
+	}
+	
+	public void toggleBoundaries(int keyEvent)	{
+		if(keyEvent == KeyEvent.VK_UP)	{
+			
+		}
+		else if(keyEvent == KeyEvent.VK_DOWN)	{
+			
+		}
 	}
 
 }

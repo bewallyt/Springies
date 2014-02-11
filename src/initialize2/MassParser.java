@@ -25,7 +25,7 @@ public class MassParser extends AbstractParser{
 			Mass tempMass;
 			String id = (String) data.get(0);
 			double x = Double.parseDouble((String) data.get(1));
-			double y = Double.parseDouble((String) data.get(2));
+			double y = Double.parseDouble((String) data.get(2)) + 200;
 			double xv = Double.parseDouble((String) data.get(3));
 			double yv = Double.parseDouble((String) data.get(4));
 			double mass = Double.parseDouble((String) data.get(5));
