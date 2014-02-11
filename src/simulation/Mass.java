@@ -1,5 +1,6 @@
 package simulation;
 
+import org.jbox2d.collision.CircleDef;
 import org.jbox2d.common.Vec2;
 
 import jboxGlue.PhysicalObjectCircle;
@@ -24,6 +25,17 @@ public class Mass extends PhysicalObjectCircle {
 		this.mass = mass;
 
 	}
+
+	
+	
+	@Override
+	protected void init(double radius, double mass) {
+		CircleDef shape = new CircleDef();
+		shape.filter.groupIndex = -1;
+		super.init(radius, mass);
+	}
+
+
 
 	public double getMassX() {
 		return this.x;

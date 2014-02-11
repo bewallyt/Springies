@@ -157,8 +157,7 @@ public class Springies extends JGEngine {
 	public void doFrame() {
 
 		if (getKey('N')) {
-			clearKey('N');
-			System.out.println("n pressed");
+
 			AssemblyFileChooser afc = new AssemblyFileChooser();
 			afc.setVisible(true);
 			try {
@@ -168,19 +167,12 @@ public class Springies extends JGEngine {
 				e.printStackTrace();
 			}
 			initAssembly(afc.getAssemblyString());
+			clearKey('N');
 		}
 
 		if (getKey('C')) {
-			clearKey('C');
 			clearAssembly();
-
-		}
-
-		if (getKey('Z')) {
-			for (WallSetup ws : totalWalls) {
-				ws.increaseWall();
-			}
-			clearKey('Z');
+			clearKey('C');
 
 		}
 
@@ -189,13 +181,10 @@ public class Springies extends JGEngine {
 		}
 
 		WorldManager.getWorld().step(1f, 1);
-		// update game objects
 
-		// createSprings();
 		toggleForces();
 		moveObjects();
 		checkCollision(1 + 2, 1);
-		// initForces(masses);
 		clearLastKey();
 
 	}
@@ -238,7 +227,9 @@ public class Springies extends JGEngine {
 
 		for (Mass m : masses) {
 
-			// m.setForce(grav.applyGravity(m).x, grav.applyGravity(m).y);
+			if (isGravityOn) {
+				m.setForce(grav.applyGravity(m).x, grav.applyGravity(m).y);
+			}
 
 			Vec2 comForce = com.obtainForce(m);
 			if (isCOMOn) {
@@ -339,47 +330,66 @@ public class Springies extends JGEngine {
 		// Toggle Gravity
 		if (getKey('G')) {
 			isGravityOn = !isGravityOn;
-
+			clearKey('G');
 		}
 		// Toggle Viscosity
 		if (getKey('V')) {
 			isViscosityOn = !isViscosityOn;
+			clearKey('V');
 		}
 		// Toggle Center of Mass
 		if (getKey('M')) {
 			isCOMOn = !isCOMOn;
+			clearKey('M');
 		}
 		// Toggle Walls (1=Top,2=Right,3=Bottom,4=Left)
 		if (getKey('1')) {
 			isTopWallOn = !isTopWallOn;
+			clearKey('1');
 		}
 		if (getKey('2')) {
 			isRightWallOn = !isRightWallOn;
+			clearKey('2');
 		}
 		if (getKey('3')) {
 			isBottomWallOn = !isBottomWallOn;
+			clearKey('3');
 		}
 		if (getKey('4')) {
 			isLeftWallOn = !isLeftWallOn;
+			clearKey('4');
 		}
 		// Toggle Muscle Amplitudes ('-' = decrease, '=' = increase)
 		if (getKey('-')) {
+			System.out.println("dfdasf");
 			for (Muscle m : totalMuscles) {
+				System.out.println(m.getAmp());
 				m.decreaseAmp();
+				System.out.println(m.getAmp());
 			}
+			clearKey('-');
 		}
 		if (getKey('=')) {
 			for (Muscle m : totalMuscles) {
+				System.out.println(m.getAmp());
 				m.increaseAmp();
+				System.out.println(m.getAmp());
 			}
+			clearKey('=');
 		}
 		clearLastKey();
 
 		if (getKey(KeyEvent.VK_UP)) {
-
+			for (WallSetup ws : totalWalls) {
+				ws.increaseWall();
+			}
+			clearKey(KeyEvent.VK_UP);
 		}
 		if (getKey(KeyEvent.VK_DOWN)) {
-
+			for (WallSetup ws : totalWalls) {
+				ws.decreaseWall();
+			}
+			clearKey(KeyEvent.VK_DOWN);
 		}
 		clearLastKey();
 	}

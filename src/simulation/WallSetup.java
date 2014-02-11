@@ -12,6 +12,7 @@ public class WallSetup extends PhysicalObjectRect {
 	final int increase = 10;
 	private String side;
 
+
 	public WallSetup(String side, double width, double thickness) {
 		super("wall", 2, JGColor.green, width, thickness);
 		this.side = side;
@@ -40,5 +41,6 @@ public class WallSetup extends PhysicalObjectRect {
 		if (side.equals("right"))
 			this.setPos(position.x + increase, position.y);
 	}
+	
 
 }

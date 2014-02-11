@@ -11,16 +11,13 @@ public class Gravity {
 	private Vec2 gravVec;
 	
 	public Gravity ( Double dir, Double mag){
-		this.dir = dir;
+		this.dir = dir/(2*3.14);
 		this.mag = mag;
 	}
 	
 	public Vec2 applyGravity(Mass m) {
 		System.out.println(m.getMass());
-		gravVec.x = (float) (Math.cos(dir) * m.getMass() * mag);
-		gravVec.y =  (float) (Math.sin(dir) * m.getMass() * mag);
-		System.out.println(gravVec.x);
-		System.out.println(gravVec.y);
+		gravVec = new Vec2((float) (Math.cos(dir) * m.getMass() * mag),(float) (Math.sin(dir) * m.getMass() * mag));
 		return gravVec;
 	
 	}
