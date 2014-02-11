@@ -11,8 +11,8 @@ public class MuscleParser extends SpringParser{
 
 	public MuscleParser(List<Mass> m, List<FixedMass> fm)	{
 		super(m,fm);
-		myObjectType = "muscle";
-		myAttributes.add("amplitude");
+		this.myObjectType = "muscle";
+		this.myAttributes.add("amplitude");
 	}
 
 	@Override

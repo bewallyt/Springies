@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
 public abstract class AbstractParser {
 	
 	protected String myObjectType;
-	protected List<String> myAttributes;
+	protected ArrayList<String> myAttributes;
 	
 	/*Initialize object type and attributes to look for when parsing*/
 	public AbstractParser()	{
