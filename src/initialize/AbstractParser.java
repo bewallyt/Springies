@@ -35,12 +35,6 @@ public abstract class AbstractParser {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(xmlCode);
 			doc.getDocumentElement().normalize();
-
-			/**
-			 * Reads model in depending on type: mass(es), spring(s), fixed,
-			 * muscle.
-			 */
-
 			NodeList nodes = doc.getElementsByTagName(myObjectType);
 			getObjects(nodes);
 		}
@@ -68,9 +62,7 @@ public abstract class AbstractParser {
 				}
 				objects.add(data);
 			}
-
 		}
-
 	}
 
 	abstract void getDefaultValue(String att, ArrayList<String> data);
