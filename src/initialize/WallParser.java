@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import simulation.Spring;
-
 public class WallParser extends AbstractParser	{
 	
 	public WallParser()	{

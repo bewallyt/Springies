@@ -41,6 +41,9 @@ public class SpringParser extends AbstractParser{
 		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 		restL = Double.parseDouble((String) data.get(2));
 		K = Double.parseDouble((String) data.get(3));
+		if(K < .01)	{
+			K = 1.0;
+		}
 		if(restL == -1.0)	{
 			restL = dist;
 		}

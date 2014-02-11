@@ -5,7 +5,6 @@ import forces.Gravity;
 import forces.Viscosity;
 import forces.WallRepulsion;
 import initialize.COMParser;
-import initialize.EnvironmentParser;
 import initialize.FileChooser;
 import initialize.FixedParser;
 import initialize.GravityParser;
@@ -166,6 +165,9 @@ public class Springies extends JGEngine {
 		drawString("=: " + (getKey('=')),20,260,-1);
 		drawString("Up: " + (getKey(KeyEvent.VK_UP)),20,290,-1);
 		drawString("Down: " + (getKey(KeyEvent.VK_DOWN)),20,320,-1);
+		
+		drawString("Press N for new assembly",200,20,-1);
+		drawString("Press C to clear assemblies",200,50,-1);
 	}
 
 	public void initForces(List<Mass> masses) {
@@ -224,7 +226,6 @@ public class Springies extends JGEngine {
 	}
 
 	public void initEnvironment() {
-		EnvironmentParser environment = new EnvironmentParser();
 		ViscosityParser visc = new ViscosityParser();
 		COMParser com = new COMParser();
 		WallParser wall = new WallParser();
@@ -243,34 +244,14 @@ public class Springies extends JGEngine {
 	 */
 
 	public void initAssembly(String assembly) {
-
-		List<FixedMass> fixedmasses;
-		List<Mass> masses;
-		List<Muscle> muscles;
-		List<Spring> springs;
-
 		FixedParser fixed = new FixedParser();
 		MassParser mass = new MassParser();
-		fixedmasses = fixed.returnFixedMasses(assembly);
-		masses = mass.returnMasses(assembly);
-
-		MuscleParser muscle = new MuscleParser(masses, fixedmasses);
-		SpringParser spring = new SpringParser(masses, fixedmasses);
-		muscles = muscle.returnMuscles(assembly);
-		springs = spring.returnSprings(assembly);
-
-		for (Mass m : masses) {
-			totalMasses.add(m);
-		}
-		for (FixedMass fm : fixedmasses) {
-			totalFixedMasses.add(fm);
-		}
-		for (Muscle mu : muscles) {
-			totalMuscles.add(mu);
-		}
-		for (Spring s : springs) {
-			totalSprings.add(s);
-		}
+		totalFixedMasses = fixed.returnFixedMasses(assembly);
+		totalMasses = mass.returnMasses(assembly);
+		MuscleParser muscle = new MuscleParser(totalMasses, totalFixedMasses);
+		SpringParser spring = new SpringParser(totalMasses, totalFixedMasses);
+		totalMuscles = muscle.returnMuscles(assembly);
+		totalSprings = spring.returnSprings(assembly);
 	}
 
 	public void clearAssembly() {
@@ -413,13 +394,13 @@ public class Springies extends JGEngine {
 		//Toggle Boundaries
 		if (getKey(KeyEvent.VK_UP)) {
 			for (WallSetup ws : totalWalls) {
-				ws.increaseWall();
+				ws.changeWall(-10);
 			}
 			clearKey(KeyEvent.VK_UP);
 		}
 		if (getKey(KeyEvent.VK_DOWN)) {
 			for (WallSetup ws : totalWalls) {
-				ws.decreaseWall();
+				ws.changeWall(10);
 			}
 			clearKey(KeyEvent.VK_DOWN);
 		}

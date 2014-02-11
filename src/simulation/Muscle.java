@@ -68,7 +68,7 @@ public class Muscle extends PhysicalObject {
 //				sinForce;
 //		double magnitude = (mySpringyness * (dist - myRestLength) * 4)
 //				+ sinForce;
-		magnitude = mySpringyness * (dist - tempRestLength) * 500;
+		magnitude = mySpringyness * (dist - tempRestLength);
 		xComp = dx / dist * magnitude;
 		yComp = dy / dist * magnitude;
 
