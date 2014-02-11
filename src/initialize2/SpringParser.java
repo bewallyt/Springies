@@ -1,7 +1,7 @@
 package initialize2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import simulation.FixedMass;
@@ -18,20 +18,22 @@ public class SpringParser extends AbstractParser{
 	public SpringParser(List<Mass> m, List<FixedMass> fm){
 		myObjectType = "spring";
 		String[] attributeArray = {"a","b","restlength","constant"};
-		myAttributes = Arrays.asList(attributeArray);
+		for(String str:attributeArray){
+			myAttributes.add(str);
+		}
 		masses = m;
 		fixedMasses = fm;
 	}
 	
-	protected void setSpringValues(ArrayList<Object> data)	{
+	protected void setSpringValues(List<String> data)	{
 		String id1 = (String) data.get(0);
 		String id2 = (String) data.get(1);
 		m1 = findMass(id1, masses);
-		if(m1 == null){
+		if(m1 == null & fixedMasses.size() != 0){
 			m1 = findFixed(id1, fixedMasses);
 		}
 		m2 = findMass(id2, masses);
-		if(m2 == null){
+		if(m2 == null && fixedMasses.size() != 0){
 			m2 = findFixed(id2, fixedMasses);
 		}
 		double dx = m2.getMassX() - m1.getMassX();
@@ -44,20 +46,24 @@ public class SpringParser extends AbstractParser{
 		}
 	}
 	
-	@Override
-	void addObject(ArrayList<Object> data, List<Object> objects) {
-		setSpringValues(data);
-		Spring tempSpring = new Spring(m1, m2, restL, K);
-		objects.add(tempSpring);
+	public List<Spring> returnSprings(String xml)	{
+		readFile(xml);
+		List<Spring> output = new ArrayList<Spring>();
+		for(List<String> data:objects)	{
+			setSpringValues(data);
+			Spring tempSpring = new Spring(m1, m2, restL, K);
+			output.add(tempSpring);
+		}
+		return Collections.unmodifiableList(output);
 	}
 
 	@Override
-	void getDefaultValue(String att, ArrayList<Object> data) {
+	void getDefaultValue(String att, ArrayList<String> data) {
 		if(att.equals("restlength"))	{
-			data.add(-1.0);
+			data.add("-1.0");
 		}
 		else if(att.equals("constant"))	{
-			data.add(1.0);
+			data.add("1.0");
 		}
 	}
 	

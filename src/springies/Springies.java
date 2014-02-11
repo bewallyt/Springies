@@ -3,25 +3,24 @@ package springies;
 import forces.CenterOfMass;
 import forces.Viscosity;
 import forces.WallRepulsion;
-import initialize.AssemblyFileChooser;
-import initialize.EnvironmentParser;
-import initialize.FixedParser;
-import initialize.MassParser;
-import initialize.MuscleParser;
-import initialize.SpringParser;
+import initialize2.AssemblyFileChooser;
+import initialize2.COMParser;
+import initialize2.EnvironmentParser;
+import initialize2.FixedParser;
+import initialize2.MassParser;
+import initialize2.MuscleParser;
+import initialize2.SpringParser;
+import initialize2.ViscosityParser;
+import initialize2.WallParser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import jboxGlue.PhysicalObject;
-import jboxGlue.PhysicalObjectCircle;
 import jboxGlue.PhysicalObjectRect;
 import jboxGlue.WorldManager;
 import jgame.JGColor;
@@ -43,10 +42,12 @@ public class Springies extends JGEngine {
 	private String environmentString;
 	private List<Double> comList;
 	private List<List<Double>> wallList;
+	
 	private List<List<FixedMass>> totalFixedMasses = new ArrayList<List<FixedMass>>();
 	private List<List<Mass>> totalMasses = new ArrayList<List<Mass>>();
 	private List<List<Muscle>> totalMuscles = new ArrayList<List<Muscle>>();
 	private List<List<Spring>> totalSprings = new ArrayList<List<Spring>>();
+
 
 	private double viscMag;
 
@@ -78,45 +79,51 @@ public class Springies extends JGEngine {
 		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
 		addWalls();
 
-		// // Initialize Environment Forces (Vectors need to be passed into
-		// Mass'
-		// // move)
-		// EnvironmentParser environment = new EnvironmentParser();
-		// // environment.readGravity(environmentString);
-		// viscMag = environment.readViscosity(environmentString);
-		// comList = environment.readCOM(environmentString);
-		// wallList = environment.readWall(environmentString);
+
+		// Initialize Environment Forces (Vectors need to be passed into Mass'
+		// move)
+		EnvironmentParser environment = new EnvironmentParser();
+		// environment.readGravity(environmentString);
+		ViscosityParser visc = new ViscosityParser();
+		COMParser com = new COMParser();
+		WallParser wall = new WallParser();
+		viscMag = visc.returnViscosity(environmentString);
+		comList = com.returnCOM(environmentString);
+		wallList = wall.returnWalls(environmentString);
+
 
 	}
 
+	/**
 	public void addBall() {
 		// add a bouncy ball
 		// NOTE: you could make this into a separate class, but I'm lazy
 		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,
 				10, 5);
 		{
-			// @Override
-			// public void hit(JGObject other) {
-			// // we hit something! bounce off it!
-			// Vec2 velocity = myBody.getLinearVelocity();
-			// // is it a tall wall?
-			// final double DAMPING_FACTOR = 0.8;
-			// boolean isSide = other.getBBox().height > other.getBBox().width;
-			// if (isSide) {
-			// velocity.x *= -DAMPING_FACTOR;
-			// } else {
-			// velocity.y *= -DAMPING_FACTOR;
-			// }
-			// // apply the change
-			// myBody.setLinearVelocity(velocity);
-			// }
+			 @Override
+			 public void hit(JGObject other) {
+			 // we hit something! bounce off it!
+			 Vec2 velocity = myBody.getLinearVelocity();
+			 // is it a tall wall?
+			 final double DAMPING_FACTOR = 0.8;
+			 boolean isSide = other.getBBox().height > other.getBBox().width;
+			 if (isSide) {
+			 velocity.x *= -DAMPING_FACTOR;
+			 } else {
+			 velocity.y *= -DAMPING_FACTOR;
+			 }
+			 // apply the change
+			 myBody.setLinearVelocity(velocity);
+			 }
 		}
 		;
 		ball.setPos(285, 190);
 
-		// ball.setForce(8000, -10000);
+		ball.setForce(8000, -10000);
 
 	}
+	*/
 
 	/**
 	 * Instantiate objects from XML files below.
@@ -223,16 +230,20 @@ public class Springies extends JGEngine {
 		List<Mass> masses;
 		List<Muscle> muscles;
 		List<Spring> springs;
+		
+		
+		//Remember how to cast: muscles = (List<Muscle>)(List<?>) muscle.readFile(object);
 
 		FixedParser fixed = new FixedParser();
 		MassParser mass = new MassParser();
-		MuscleParser muscle = new MuscleParser();
-		SpringParser spring = new SpringParser();
-
-		fixedmasses = fixed.createFixedMasses(assembly);
-		masses = mass.createMasses(assembly);
-		muscles = muscle.createMuscles(assembly, masses, fixedmasses);
-		springs = spring.createSprings(assembly, masses, fixedmasses);
+		fixedmasses = fixed.returnFixedMasses(assembly);
+		masses = mass.returnMasses(assembly);
+		
+		MuscleParser muscle = new MuscleParser(masses, fixedmasses);
+		SpringParser spring = new SpringParser(masses, fixedmasses);
+		muscles = muscle.returnMuscles(assembly);
+		springs = spring.returnSprings(assembly);
+		
 
 		if (fixedmasses.size() != 0) {
 			totalFixedMasses.add(fixedmasses);

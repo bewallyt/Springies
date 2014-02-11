@@ -6,7 +6,6 @@ import initialize.SimpleFileChooser;
  * @author Robert C. Duvall, In-Young Jo, Benson Tran.
  */
 
-
 public class Main {
 
 	public static void main(String args[]) {
@@ -14,6 +13,5 @@ public class Main {
 		sfc.setVisible(true);
 
 	}
-	
 
 }

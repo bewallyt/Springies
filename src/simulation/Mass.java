@@ -77,5 +77,9 @@ public class Mass extends PhysicalObjectCircle {
 		Vec2 velocity = myBody.getLinearVelocity();
 		return velocity;
 	}
+	
+	public String toString(){
+		return id + " x:" + x + " y:" + y;
+	}
 
 }

@@ -1,8 +1,13 @@
-package initialize;
+package initialize2;
 
 // SimpleFileChooser.java
 // A simple file chooser to see what it takes to make one of these work.
 //
+import initialize.FixedParser;
+import initialize.MassParser;
+import initialize.MuscleParser;
+import initialize.SpringParser;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
