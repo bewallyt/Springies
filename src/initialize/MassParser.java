@@ -7,8 +7,6 @@ import java.util.List;
 import simulation.Mass;
 
 public class MassParser extends AbstractParser{
-
-	private double MASS_RADIUS = 5;
 	
 	public MassParser(){
 		myObjectType = "mass";
@@ -29,7 +27,7 @@ public class MassParser extends AbstractParser{
 			double xv = Double.parseDouble((String) data.get(3));
 			double yv = Double.parseDouble((String) data.get(4));
 			double mass = Double.parseDouble((String) data.get(5));
-			tempMass = new Mass(id,MASS_RADIUS,x,y,mass,xv,yv);
+			tempMass = new Mass(id,x,y,mass,xv,yv);
 			tempMass.setPos(x,y - 200);
 			//For Test
 			tempMass.setForce(80, -100);

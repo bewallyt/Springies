@@ -52,7 +52,12 @@ public class Springies extends JGEngine {
 	private boolean isTopWallOn = false;
 	private boolean isBottomWallOn = false;
 	private boolean isCOMOn = false;
-
+	
+	private boolean mouseMassCreated = false;
+	private Mass mouseMass;
+	private Mass closest;
+	private Spring mouseSpring;
+	
 	private List<FixedMass> totalFixedMasses = new ArrayList<FixedMass>();
 	private List<Mass> totalMasses = new ArrayList<Mass>();
 	private List<Muscle> totalMuscles = new ArrayList<Muscle>();
@@ -137,6 +142,11 @@ public class Springies extends JGEngine {
 			initForces(totalMasses);
 		}
 
+		WorldManager.getWorld().step(1f, 1);
+
+		// createSprings();
+		mouseAction();
+
 		moveObjects();
 		checkCollision(1 + 2, 1);
 		clearLastKey();
@@ -145,17 +155,17 @@ public class Springies extends JGEngine {
 
 	@Override
 	public void paintFrame() {
-		drawString("G: " + (isGravityOn), 20, 20, -1);
-		drawString("V: " + (isViscosityOn), 20, 50, -1);
-		drawString("M: " + (isCOMOn), 20, 80, -1);
-		drawString("1: " + (isTopWallOn), 20, 110, -1);
-		drawString("2: " + (isRightWallOn), 20, 140, -1);
-		drawString("3: " + (isBottomWallOn), 20, 170, -1);
-		drawString("4: " + (isLeftWallOn), 20, 200, -1);
-		drawString("-: " + (getKey('-')), 20, 230, -1);
-		drawString("=: " + (getKey('=')), 20, 260, -1);
-		drawString("Up: " + (getLastKey() == KeyEvent.VK_UP), 20, 290, -1);
-		drawString("Down: " + (getLastKey() == KeyEvent.VK_DOWN), 20, 320, -1);
+		drawString("G: " + (isGravityOn),20,20,-1);
+		drawString("V: " + (isViscosityOn),20,50,-1);
+		drawString("M: " + (isCOMOn),20,80,-1);
+		drawString("1: " + (isTopWallOn),20,110,-1);
+		drawString("2: " + (isRightWallOn),20,140,-1);
+		drawString("3: " + (isBottomWallOn),20,170,-1);
+		drawString("4: " + (isLeftWallOn),20,200,-1);
+		drawString("-: " + (getKey('-')),20,230,-1);
+		drawString("=: " + (getKey('=')),20,260,-1);
+		drawString("Up: " + (getKey(KeyEvent.VK_UP)),20,290,-1);
+		drawString("Down: " + (getKey(KeyEvent.VK_DOWN)),20,320,-1);
 	}
 
 	public void initForces(List<Mass> masses) {
@@ -306,6 +316,44 @@ public class Springies extends JGEngine {
 		}
 
 	}
+	
+	public void mouseAction()	{
+		if(getMouseButton(1) && totalMasses.size()>0)	{
+			if(!mouseMassCreated)	{
+				mouseMass = new Mass("mouseMass",getMousePos().x,getMousePos().y,0,0,0);
+				closest = closestMass(mouseMass);
+				double dist = getDist(mouseMass,closest);
+				mouseSpring = new Spring(mouseMass,closest,dist,.5);
+				mouseMassCreated = true;
+			}
+			else	{
+				mouseMass.setPos(getMousePos().x,getMousePos().y);
+			}
+		}
+		if(!getMouseButton(1) && mouseMassCreated)	{
+			mouseSpring.terminate();
+			mouseMass.remove();
+			mouseMassCreated = false;
+		}
+		
+	}
+	
+	public Mass closestMass(Mass m1){
+		Mass closest = totalMasses.get(0);
+		for(Mass m : totalMasses)	{
+			if(getDist(m1,m) < getDist(m1,closest)){
+				closest = m;
+			}
+		}
+		return closest;
+	}
+	
+	public double getDist(Mass m1, Mass m2)	{
+		double dx = m2.getMassX() - m1.getMassX();
+		double dy = m2.getMassY() - m1.getMassY();
+		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+		return dist;
+	}
 
 	public void toggleForces() {
 		// Toggle Gravity
@@ -358,8 +406,11 @@ public class Springies extends JGEngine {
 			}
 			clearKey('=');
 		}
+
 		clearLastKey();
 		// Change size of walled area
+
+		//Toggle Boundaries
 		if (getKey(KeyEvent.VK_UP)) {
 			for (WallSetup ws : totalWalls) {
 				ws.increaseWall();
