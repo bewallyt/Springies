@@ -1,25 +1,18 @@
-package initialize2;
+package initialize;
 
 // SimpleFileChooser.java
 // A simple file chooser to see what it takes to make one of these work.
 //
-import initialize.FixedParser;
-import initialize.MassParser;
-import initialize.MuscleParser;
-import initialize.SpringParser;
+
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import simulation.FixedMass;
-import simulation.Mass;
-
-public class AssemblyFileChooser extends JFrame {
+public class AssemblyFileChooser extends JFrame{
 
 	private String assemblyString;
 	
@@ -63,7 +56,6 @@ public class AssemblyFileChooser extends JFrame {
 		openButtonFinish.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 
-				//addAssemblies();
 				close();
 
 			}
@@ -80,23 +72,5 @@ public class AssemblyFileChooser extends JFrame {
 		this.dispose();
 	}
 
-	public List<Mass> addAssemblies() {
-		List<FixedMass> fixedmassesV2;
-		List<Mass> massesV2;
-
-		FixedParser fixed = new FixedParser();
-		MassParser mass = new MassParser();
-		MuscleParser muscle = new MuscleParser();
-		SpringParser spring = new SpringParser();
-
-		fixedmassesV2 = fixed.createFixedMasses(assemblyString);
-		massesV2 = mass.createMasses(assemblyString);
-		muscle.createMuscles(assemblyString, massesV2, fixedmassesV2);
-		spring.createSprings(assemblyString, massesV2, fixedmassesV2);
-		return massesV2;
-		
-
-
-	}
 
 }

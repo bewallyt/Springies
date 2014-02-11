@@ -1,4 +1,4 @@
-package initialize2;
+package initialize;
 
 public class ViscosityParser extends EnvironmentParser	{
 	

@@ -3,15 +3,15 @@ package springies;
 import forces.CenterOfMass;
 import forces.Viscosity;
 import forces.WallRepulsion;
-import initialize2.AssemblyFileChooser;
-import initialize2.COMParser;
-import initialize2.EnvironmentParser;
-import initialize2.FixedParser;
-import initialize2.MassParser;
-import initialize2.MuscleParser;
-import initialize2.SpringParser;
-import initialize2.ViscosityParser;
-import initialize2.WallParser;
+import initialize.AssemblyFileChooser;
+import initialize.COMParser;
+import initialize.EnvironmentParser;
+import initialize.FixedParser;
+import initialize.MassParser;
+import initialize.MuscleParser;
+import initialize.SpringParser;
+import initialize.ViscosityParser;
+import initialize.WallParser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -43,11 +43,6 @@ public class Springies extends JGEngine {
 	private String environmentString;
 	private List<Double> comList;
 	private List<List<Double>> wallList;
-	
-	private List<List<FixedMass>> totalFixedMasses = new ArrayList<List<FixedMass>>();
-	private List<List<Mass>> totalMasses = new ArrayList<List<Mass>>();
-	private List<List<Muscle>> totalMuscles = new ArrayList<List<Muscle>>();
-	private List<List<Spring>> totalSprings = new ArrayList<List<Spring>>();
 
 	private boolean isGravityOn = true;
 	private boolean isViscosityOn = true;
@@ -56,6 +51,11 @@ public class Springies extends JGEngine {
 	private boolean isTopWallOn = true;
 	private boolean isBottomWallOn = true;
 	private boolean isCOMOn = true;
+
+	private List<FixedMass> totalFixedMasses = new ArrayList<FixedMass>();
+	private List<Mass> totalMasses = new ArrayList<Mass>();
+	private List<Muscle> totalMuscles = new ArrayList<Muscle>();
+	private List<Spring> totalSprings = new ArrayList<Spring>();
 
 	private double viscMag;
 
@@ -84,9 +84,8 @@ public class Springies extends JGEngine {
 		// so gravity is up in world coords and down in game coords
 		// so set all directions (e.g., forces, velocities) in world coords
 		WorldManager.initWorld(this);
-		WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
+		//WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
 		addWalls();
-
 
 		// Initialize Environment Forces (Vectors need to be passed into Mass'
 		// move)
@@ -99,39 +98,26 @@ public class Springies extends JGEngine {
 		comList = com.returnCOM(environmentString);
 		wallList = wall.returnWalls(environmentString);
 
-
 	}
 
 	/**
-	public void addBall() {
-		// add a bouncy ball
-		// NOTE: you could make this into a separate class, but I'm lazy
-		PhysicalObject ball = new PhysicalObjectCircle("ball", 1, JGColor.blue,
-				10, 5);
-		{
-			 @Override
-			 public void hit(JGObject other) {
-			 // we hit something! bounce off it!
-			 Vec2 velocity = myBody.getLinearVelocity();
-			 // is it a tall wall?
-			 final double DAMPING_FACTOR = 0.8;
-			 boolean isSide = other.getBBox().height > other.getBBox().width;
-			 if (isSide) {
-			 velocity.x *= -DAMPING_FACTOR;
-			 } else {
-			 velocity.y *= -DAMPING_FACTOR;
-			 }
-			 // apply the change
-			 myBody.setLinearVelocity(velocity);
-			 }
-		}
-		;
-		ball.setPos(285, 190);
-
-		ball.setForce(8000, -10000);
-
-	}
-	*/
+	 * public void addBall() { // add a bouncy ball // NOTE: you could make this
+	 * into a separate class, but I'm lazy PhysicalObject ball = new
+	 * PhysicalObjectCircle("ball", 1, JGColor.blue, 10, 5); {
+	 * 
+	 * @Override public void hit(JGObject other) { // we hit something! bounce
+	 *           off it! Vec2 velocity = myBody.getLinearVelocity(); // is it a
+	 *           tall wall? final double DAMPING_FACTOR = 0.8; boolean isSide =
+	 *           other.getBBox().height > other.getBBox().width; if (isSide) {
+	 *           velocity.x *= -DAMPING_FACTOR; } else { velocity.y *=
+	 *           -DAMPING_FACTOR; } // apply the change
+	 *           myBody.setLinearVelocity(velocity); } } ; ball.setPos(285,
+	 *           190);
+	 * 
+	 *           ball.setForce(8000, -10000);
+	 * 
+	 *           }
+	 */
 
 	/**
 	 * Instantiate objects from XML files below.
@@ -171,16 +157,20 @@ public class Springies extends JGEngine {
 			try {
 				Thread.sleep(6000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 			initAssembly(afc.getAssemblyString());
-			// initForces(afc.addAssemblies());
 		}
 
 		if (getKey('C')) {
 			clearKey('C');
 			clearAssembly();
+			
+		}
+		
+		if(totalMasses.size() != 0){
+			initForces(totalMasses);
 		}
 
 		WorldManager.getWorld().step(1f, 1);
@@ -197,6 +187,7 @@ public class Springies extends JGEngine {
 	
 	@Override
 	public void paintFrame() {
+		
 	}
 
 	public void initForces(List<Mass> masses) {
@@ -240,39 +231,55 @@ public class Springies extends JGEngine {
 		List<Mass> masses;
 		List<Muscle> muscles;
 		List<Spring> springs;
-		
-		
-		//Remember how to cast: muscles = (List<Muscle>)(List<?>) muscle.readFile(object);
+
+		// Remember how to cast: muscles = (List<Muscle>)(List<?>)
+		// muscle.readFile(object);
 
 		FixedParser fixed = new FixedParser();
 		MassParser mass = new MassParser();
 		fixedmasses = fixed.returnFixedMasses(assembly);
 		masses = mass.returnMasses(assembly);
-		
+
 		MuscleParser muscle = new MuscleParser(masses, fixedmasses);
 		SpringParser spring = new SpringParser(masses, fixedmasses);
 		muscles = muscle.returnMuscles(assembly);
 		springs = spring.returnSprings(assembly);
 		
+		
 
-		if (fixedmasses.size() != 0) {
-			totalFixedMasses.add(fixedmasses);
+		for (Mass m : masses) {
+			totalMasses.add(m);
 		}
-		if (masses.size() != 0) {
-			totalMasses.add(masses);
+		for (FixedMass fm : fixedmasses) {
+			totalFixedMasses.add(fm);
 		}
-		if (muscles.size() != 0) {
-			totalMuscles.add(muscles);
-		}
-		if (springs.size() != 0) {
-			totalSprings.add(springs);
+//		for (Muscle mu : muscles) {
+//			totalMuscles.add(mu);
+//		}
+		for (Spring s : springs) {
+			totalSprings.add(s);
 		}
 	}
 
 	public void clearAssembly() {
+		
+		for (Spring s : totalSprings) {
+			s.terminate();
+		}
+		
+		for (Mass m : totalMasses) {
+			m.remove();
+		}
+		for (FixedMass fm : totalFixedMasses) {
+			fm.remove();
+		}
+//		for (Muscle mu : totalMuscles) {
+//			mu.remove();
+//		}
+
 		totalFixedMasses.clear();
 		totalMasses.clear();
-		totalMuscles.clear();
+//		totalMuscles.clear();
 		totalSprings.clear();
 	}
 
