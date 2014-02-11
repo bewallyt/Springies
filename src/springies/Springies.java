@@ -44,13 +44,13 @@ public class Springies extends JGEngine {
 	private List<Double> comList;
 	private List<List<Double>> wallList;
 
-	private boolean isGravityOn = true;
-	private boolean isViscosityOn = true;
-	private boolean isRightWallOn = true;
-	private boolean isLeftWallOn = true;
-	private boolean isTopWallOn = true;
-	private boolean isBottomWallOn = true;
-	private boolean isCOMOn = true;
+	private boolean isGravityOn = false;
+	private boolean isViscosityOn = false;
+	private boolean isRightWallOn = false;
+	private boolean isLeftWallOn = false;
+	private boolean isTopWallOn = false;
+	private boolean isBottomWallOn = false;
+	private boolean isCOMOn = false;
 
 	private List<FixedMass> totalFixedMasses = new ArrayList<FixedMass>();
 	private List<Mass> totalMasses = new ArrayList<Mass>();
@@ -177,21 +177,34 @@ public class Springies extends JGEngine {
 		// update game objects
 
 		// createSprings();
-		
+		toggleForces();
+		toggleBoundaries(getLastKey());
 		moveObjects();
 		checkCollision(1 + 2, 1);
 		// initForces(masses);
+		clearLastKey();
 
 	}
 
 	
 	@Override
 	public void paintFrame() {
-		
+		drawString("G: " + (isGravityOn),20,20,-1);
+		drawString("V: " + (isViscosityOn),20,50,-1);
+		drawString("M: " + (isCOMOn),20,80,-1);
+		drawString("1: " + (isTopWallOn),20,110,-1);
+		drawString("2: " + (isRightWallOn),20,140,-1);
+		drawString("3: " + (isBottomWallOn),20,170,-1);
+		drawString("4: " + (isLeftWallOn),20,200,-1);
+		drawString("-: " + (getKey('-')),20,230,-1);
+		drawString("=: " + (getKey('=')),20,260,-1);
+		drawString("Up: " + (getLastKey() == KeyEvent.VK_UP),20,290,-1);
+		drawString("Down: " + (getLastKey() == KeyEvent.VK_DOWN),20,320,-1);
 	}
 
 	public void initForces(List<Mass> masses) {
 		// apple COM & Wall Repulsion & Viscosity
+		
 		CenterOfMass com = new CenterOfMass(comList.get(0), comList.get(1));
 
 		WallRepulsion wr0 = new WallRepulsion(1, wallList.get(0).get(1),
@@ -205,23 +218,36 @@ public class Springies extends JGEngine {
 
 		WallRepulsion wr3 = new WallRepulsion(4, wallList.get(3).get(1),
 				wallList.get(3).get(2));
-
+		
 		Viscosity visc = new Viscosity(viscMag);
 
 		for (Mass m : masses) {
 
 			Vec2 comForce = com.obtainForce(m);
-			m.setForce(comForce.x, comForce.y);
-			visc.setViscosity(m.getVelocity());
-
+			if(isCOMOn)	{
+				m.setForce(comForce.x, comForce.y);
+			}
+	
+			if(isViscosityOn){
+				visc.setViscosity(m.getVelocity());
+			}
+			
 			Vec2 wallForce0 = wr0.obtainForce(m, SIZE);
 			Vec2 wallForce1 = wr1.obtainForce(m, SIZE);
 			Vec2 wallForce2 = wr2.obtainForce(m, SIZE);
 			Vec2 wallForce3 = wr3.obtainForce(m, SIZE);
-			m.setForce(wallForce0.x * 90, wallForce0.y * 90);
-			m.setForce(wallForce1.x * 90, wallForce1.y * 90);
-			m.setForce(wallForce2.x * 90, wallForce2.y * 90);
-			m.setForce(wallForce3.x * 90, wallForce3.y * 90);
+			if(isTopWallOn)	{
+				m.setForce(wallForce0.x * 90, wallForce0.y * 90);
+			}
+			if(isRightWallOn)	{
+				m.setForce(wallForce1.x * 90, wallForce1.y * 90);
+			}
+			if(isBottomWallOn){
+				m.setForce(wallForce2.x * 90, wallForce2.y * 90);
+			}
+			if(isLeftWallOn)	{
+				m.setForce(wallForce3.x * 90, wallForce3.y * 90);
+			}
 		}
 	}
 
@@ -298,37 +324,42 @@ public class Springies extends JGEngine {
 	public void toggleForces()	{
 		//Toggle Gravity
 		if(getKey('G'))	{
+			isGravityOn = !isGravityOn;
 			
 		}
 		//Toggle Viscosity
 		if(getKey('V'))	{
-			
+			isViscosityOn = !isViscosityOn;
 		}
 		//Toggle Center of Mass
 		if(getKey('M'))	{
-			
+			isCOMOn = !isCOMOn;
 		}
 		//Toggle Walls (1=Top,2=Right,3=Bottom,4=Left)
 		if(getKey('1'))	{
-			
+			isTopWallOn = !isTopWallOn;
 		}
 		if(getKey('2'))	{
-			
+			isRightWallOn = !isRightWallOn;
 		}
 		if(getKey('3'))	{
-			
+			isBottomWallOn = !isBottomWallOn;
 		}
 		if(getKey('4'))	{
-			
+			isLeftWallOn = !isLeftWallOn;
 		}
 		//Toggle Muscle Amplitudes ('-' = decrease, '=' = increase)
 		if(getKey('-'))	{
-			
+			for(Muscle m : totalMuscles){
+				m.decreaseAmp();
+			}
 		}
 		if(getKey('='))	{
-			
+			for(Muscle m : totalMuscles){
+				m.increaseAmp();
+			}
 		}
-		
+		clearLastKey();
 	}
 	
 	public void toggleBoundaries(int keyEvent)	{
@@ -338,6 +369,7 @@ public class Springies extends JGEngine {
 		else if(keyEvent == KeyEvent.VK_DOWN)	{
 			
 		}
+		clearLastKey();
 	}
 
 }
