@@ -17,11 +17,11 @@ import initialize.WallParser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
-
 
 import jboxGlue.WorldManager;
 import jgame.platform.JGEngine;
@@ -45,6 +45,14 @@ public class Springies extends JGEngine {
 	private List<Double> gravityList;
 	private List<List<Double>> wallList;
 
+	private boolean isGravityOn = false;
+	private boolean isViscosityOn = false;
+	private boolean isRightWallOn = false;
+	private boolean isLeftWallOn = false;
+	private boolean isTopWallOn = false;
+	private boolean isBottomWallOn = false;
+	private boolean isCOMOn = false;
+
 	private List<FixedMass> totalFixedMasses = new ArrayList<FixedMass>();
 	private List<Mass> totalMasses = new ArrayList<Mass>();
 	private List<Muscle> totalMuscles = new ArrayList<Muscle>();
@@ -54,7 +62,7 @@ public class Springies extends JGEngine {
 	private double viscMag;
 
 	public Springies(String environment) {
-		int height = 480;
+		int height = 600;
 		double aspect = 16.0 / 9.0;
 		initEngineComponent((int) (height * aspect), height);
 
@@ -88,35 +96,36 @@ public class Springies extends JGEngine {
 		COMParser com = new COMParser();
 		WallParser wall = new WallParser();
 		GravityParser grav = new GravityParser();
-		
+
 		viscMag = visc.returnViscosity(environmentString);
 		comList = com.returnCOM(environmentString);
 		wallList = wall.returnWalls(environmentString);
 		gravityList = grav.returnGravity(environmentString);
 
 	}
-	
-	private void addWalls ()
-	{
+
+	private void addWalls() {
 		// add walls to bounce off of
 		// NOTE: immovable objects must have no mass
 		final double WALL_MARGIN = 10;
 		final double WALL_THICKNESS = 10;
-		final double WALL_WIDTH = displayWidth() - WALL_MARGIN * 2 + WALL_THICKNESS;
-		final double WALL_HEIGHT = displayHeight() - WALL_MARGIN * 2 + WALL_THICKNESS;
+		final double WALL_WIDTH = displayWidth() - WALL_MARGIN * 2
+				+ WALL_THICKNESS;
+		final double WALL_HEIGHT = displayHeight() - WALL_MARGIN * 2
+				+ WALL_THICKNESS;
 		WallSetup wall = new WallSetup("top", WALL_WIDTH, WALL_THICKNESS);
 		wall.setPos(displayWidth() / 2, WALL_MARGIN);
 		totalWalls.add(wall);
 
-		wall = new WallSetup ("bottom",WALL_WIDTH, WALL_THICKNESS);
+		wall = new WallSetup("bottom", WALL_WIDTH, WALL_THICKNESS);
 		wall.setPos(displayWidth() / 2, displayHeight() - WALL_MARGIN);
 		totalWalls.add(wall);
 
-		wall = new WallSetup ("left",WALL_THICKNESS, WALL_HEIGHT);
+		wall = new WallSetup("left", WALL_THICKNESS, WALL_HEIGHT);
 		wall.setPos(WALL_MARGIN, displayHeight() / 2);
 		totalWalls.add(wall);
 
-		wall = new WallSetup("right",WALL_THICKNESS, WALL_HEIGHT);
+		wall = new WallSetup("right", WALL_THICKNESS, WALL_HEIGHT);
 		wall.setPos(displayWidth() - WALL_MARGIN, displayHeight() / 2);
 		totalWalls.add(wall);
 	}
@@ -166,13 +175,12 @@ public class Springies extends JGEngine {
 			clearAssembly();
 
 		}
-		
+
 		if (getKey('Z')) {
-			for(WallSetup ws : totalWalls){
+			for (WallSetup ws : totalWalls) {
 				ws.increaseWall();
 			}
 			clearKey('Z');
-			
 
 		}
 
@@ -184,19 +192,32 @@ public class Springies extends JGEngine {
 		// update game objects
 
 		// createSprings();
+		toggleForces();
 		moveObjects();
 		checkCollision(1 + 2, 1);
 		// initForces(masses);
+		clearLastKey();
 
 	}
 
 	@Override
 	public void paintFrame() {
-
+		drawString("G: " + (isGravityOn), 20, 20, -1);
+		drawString("V: " + (isViscosityOn), 20, 50, -1);
+		drawString("M: " + (isCOMOn), 20, 80, -1);
+		drawString("1: " + (isTopWallOn), 20, 110, -1);
+		drawString("2: " + (isRightWallOn), 20, 140, -1);
+		drawString("3: " + (isBottomWallOn), 20, 170, -1);
+		drawString("4: " + (isLeftWallOn), 20, 200, -1);
+		drawString("-: " + (getKey('-')), 20, 230, -1);
+		drawString("=: " + (getKey('=')), 20, 260, -1);
+		drawString("Up: " + (getLastKey() == KeyEvent.VK_UP), 20, 290, -1);
+		drawString("Down: " + (getLastKey() == KeyEvent.VK_DOWN), 20, 320, -1);
 	}
 
 	public void initForces(List<Mass> masses) {
 		// apple COM & Wall Repulsion & Viscosity
+
 		CenterOfMass com = new CenterOfMass(comList.get(0), comList.get(1));
 
 		WallRepulsion wr0 = new WallRepulsion(1, wallList.get(0).get(1),
@@ -210,29 +231,40 @@ public class Springies extends JGEngine {
 
 		WallRepulsion wr3 = new WallRepulsion(4, wallList.get(3).get(1),
 				wallList.get(3).get(2));
-		
+
 		Gravity grav = new Gravity(gravityList.get(0), gravityList.get(1));
-		
+
 		Viscosity visc = new Viscosity(viscMag);
 
 		for (Mass m : masses) {
-			
 
-			//m.setForce(grav.applyGravity(m).x, grav.applyGravity(m).y);
-			
+			// m.setForce(grav.applyGravity(m).x, grav.applyGravity(m).y);
 
 			Vec2 comForce = com.obtainForce(m);
-			m.setForce(comForce.x, comForce.y);
-			visc.setViscosity(m.getVelocity());
+			if (isCOMOn) {
+				m.setForce(comForce.x, comForce.y);
+			}
+
+			if (isViscosityOn) {
+				visc.setViscosity(m.getVelocity());
+			}
 
 			Vec2 wallForce0 = wr0.obtainForce(m, SIZE);
 			Vec2 wallForce1 = wr1.obtainForce(m, SIZE);
 			Vec2 wallForce2 = wr2.obtainForce(m, SIZE);
 			Vec2 wallForce3 = wr3.obtainForce(m, SIZE);
-			m.setForce(wallForce0.x * 90, wallForce0.y * 90);
-			m.setForce(wallForce1.x * 90, wallForce1.y * 90);
-			m.setForce(wallForce2.x * 90, wallForce2.y * 90);
-			m.setForce(wallForce3.x * 90, wallForce3.y * 90);
+			if (isTopWallOn) {
+				m.setForce(wallForce0.x * 90, wallForce0.y * 90);
+			}
+			if (isRightWallOn) {
+				m.setForce(wallForce1.x * 90, wallForce1.y * 90);
+			}
+			if (isBottomWallOn) {
+				m.setForce(wallForce2.x * 90, wallForce2.y * 90);
+			}
+			if (isLeftWallOn) {
+				m.setForce(wallForce3.x * 90, wallForce3.y * 90);
+			}
 		}
 	}
 
@@ -301,6 +333,55 @@ public class Springies extends JGEngine {
 
 		frame.setVisible(true);
 
+	}
+
+	public void toggleForces() {
+		// Toggle Gravity
+		if (getKey('G')) {
+			isGravityOn = !isGravityOn;
+
+		}
+		// Toggle Viscosity
+		if (getKey('V')) {
+			isViscosityOn = !isViscosityOn;
+		}
+		// Toggle Center of Mass
+		if (getKey('M')) {
+			isCOMOn = !isCOMOn;
+		}
+		// Toggle Walls (1=Top,2=Right,3=Bottom,4=Left)
+		if (getKey('1')) {
+			isTopWallOn = !isTopWallOn;
+		}
+		if (getKey('2')) {
+			isRightWallOn = !isRightWallOn;
+		}
+		if (getKey('3')) {
+			isBottomWallOn = !isBottomWallOn;
+		}
+		if (getKey('4')) {
+			isLeftWallOn = !isLeftWallOn;
+		}
+		// Toggle Muscle Amplitudes ('-' = decrease, '=' = increase)
+		if (getKey('-')) {
+			for (Muscle m : totalMuscles) {
+				m.decreaseAmp();
+			}
+		}
+		if (getKey('=')) {
+			for (Muscle m : totalMuscles) {
+				m.increaseAmp();
+			}
+		}
+		clearLastKey();
+
+		if (getKey(KeyEvent.VK_UP)) {
+
+		}
+		if (getKey(KeyEvent.VK_DOWN)) {
+
+		}
+		clearLastKey();
 	}
 
 }

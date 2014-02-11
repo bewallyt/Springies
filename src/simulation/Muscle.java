@@ -39,15 +39,28 @@ public class Muscle extends Spring {
 		double sinForce = Math.sin(radian) * 250 * myAmplitude;
 		double magnitude = (mySpringyness * (dist - myRestLength) * 8)
 				+ sinForce;
-		//double magnitude = (mySpringyness * (dist - myRestLength) * 70) + sinForce;
+		// double magnitude = (mySpringyness * (dist - myRestLength) * 70) +
+		// sinForce;
 		double xComp = dx / dist * magnitude;
 		double yComp = dy / dist * magnitude;
+
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
 	}
 
 	public void terminate() {
 		clear = 1;
+	}
 
+	public void decreaseAmp() {
+		myAmplitude -= 30;
+	}
+
+	public void increaseAmp() {
+		myAmplitude += 30;
+	}
+
+	public double getAmp()	{
+		return myAmplitude;
 	}
 }
