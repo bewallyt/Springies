@@ -4,9 +4,9 @@ import forces.CenterOfMass;
 import forces.Gravity;
 import forces.Viscosity;
 import forces.WallRepulsion;
-import initialize.AssemblyFileChooser;
 import initialize.COMParser;
 import initialize.EnvironmentParser;
+import initialize.FileChooser;
 import initialize.FixedParser;
 import initialize.GravityParser;
 import initialize.MassParser;
@@ -80,33 +80,21 @@ public class Springies extends JGEngine {
 	public void initGame() {
 
 		setFrameRate(60, 2);
-		// NOTE:
-		// world coordinates have y pointing down
-		// game coordinates have y pointing up
-		// so gravity is up in world coords and down in game coords
-		// so set all directions (e.g., forces, velocities) in world coords
+
+		/**
+		 * initEnvironment() initializes Viscosity, Gravity, Wall Repulsion,
+		 * Center of Mass addWalls() sets default wall dimensions. stored in
+		 * totalWalls List.
+		 */
+
 		WorldManager.initWorld(this);
 		addWalls();
-		// WorldManager.getWorld().setGravity(new Vec2(0.0f, 0.1f));
-
-		// Initialize Environment Forces (Vectors need to be passed into Mass'
-		// move)
-		EnvironmentParser environment = new EnvironmentParser();
-		ViscosityParser visc = new ViscosityParser();
-		COMParser com = new COMParser();
-		WallParser wall = new WallParser();
-		GravityParser grav = new GravityParser();
-
-		viscMag = visc.returnViscosity(environmentString);
-		comList = com.returnCOM(environmentString);
-		wallList = wall.returnWalls(environmentString);
-		gravityList = grav.returnGravity(environmentString);
+		initEnvironment();
 
 	}
 
 	private void addWalls() {
-		// add walls to bounce off of
-		// NOTE: immovable objects must have no mass
+
 		final double WALL_MARGIN = 10;
 		final double WALL_THICKNESS = 10;
 		final double WALL_WIDTH = displayWidth() - WALL_MARGIN * 2
@@ -130,59 +118,25 @@ public class Springies extends JGEngine {
 		totalWalls.add(wall);
 	}
 
-	/**
-	 * public void addBall() { // add a bouncy ball // NOTE: you could make this
-	 * into a separate class, but I'm lazy PhysicalObject ball = new
-	 * PhysicalObjectCircle("ball", 1, JGColor.blue, 10, 5); {
-	 * 
-	 * @Override public void hit(JGObject other) { // we hit something! bounce
-	 *           off it! Vec2 velocity = myBody.getLinearVelocity(); // is it a
-	 *           tall wall? final double DAMPING_FACTOR = 0.8; boolean isSide =
-	 *           other.getBBox().height > other.getBBox().width; if (isSide) {
-	 *           velocity.x *= -DAMPING_FACTOR; } else { velocity.y *=
-	 *           -DAMPING_FACTOR; } // apply the change
-	 *           myBody.setLinearVelocity(velocity); } } ; ball.setPos(285,
-	 *           190);
-	 * 
-	 *           ball.setForce(8000, -10000);
-	 * 
-	 *           }
-	 */
-
-	/**
-	 * Instantiate objects from XML files below.
-	 */
-
 	@Override
 	public void doFrame() {
 
-		if (getKey('N')) {
+		WorldManager.getWorld().step(1f, 1);
 
-			AssemblyFileChooser afc = new AssemblyFileChooser();
-			afc.setVisible(true);
-			try {
-				Thread.sleep(6000);
-			} catch (InterruptedException e) {
+		/**
+		 * toggleAssembly(): "N" Opens File Chooser for Assembly. "C" Clears all
+		 * Assemblies toggleForces(): Toggles all environment forces, wall
+		 * repulsion/position, muscle amplitude. toggle statuses are displayed
+		 * via paintframe()
+		 */
 
-				e.printStackTrace();
-			}
-			initAssembly(afc.getAssemblyString());
-			clearKey('N');
-		}
-
-		if (getKey('C')) {
-			clearAssembly();
-			clearKey('C');
-
-		}
+		toggleAssembly();
+		toggleForces();
 
 		if (totalMasses.size() != 0) {
 			initForces(totalMasses);
 		}
 
-		WorldManager.getWorld().step(1f, 1);
-
-		toggleForces();
 		moveObjects();
 		checkCollision(1 + 2, 1);
 		clearLastKey();
@@ -205,7 +159,6 @@ public class Springies extends JGEngine {
 	}
 
 	public void initForces(List<Mass> masses) {
-		// apple COM & Wall Repulsion & Viscosity
 
 		CenterOfMass com = new CenterOfMass(comList.get(0), comList.get(1));
 
@@ -227,6 +180,11 @@ public class Springies extends JGEngine {
 
 		for (Mass m : masses) {
 
+			Vec2 wallForce0 = wr0.obtainForce(m, SIZE);
+			Vec2 wallForce1 = wr1.obtainForce(m, SIZE);
+			Vec2 wallForce2 = wr2.obtainForce(m, SIZE);
+			Vec2 wallForce3 = wr3.obtainForce(m, SIZE);
+
 			if (isGravityOn) {
 				m.setForce(grav.applyGravity(m).x, grav.applyGravity(m).y);
 			}
@@ -240,10 +198,6 @@ public class Springies extends JGEngine {
 				visc.setViscosity(m.getVelocity());
 			}
 
-			Vec2 wallForce0 = wr0.obtainForce(m, SIZE);
-			Vec2 wallForce1 = wr1.obtainForce(m, SIZE);
-			Vec2 wallForce2 = wr2.obtainForce(m, SIZE);
-			Vec2 wallForce3 = wr3.obtainForce(m, SIZE);
 			if (isTopWallOn) {
 				m.setForce(wallForce0.x * 90, wallForce0.y * 90);
 			}
@@ -259,15 +213,31 @@ public class Springies extends JGEngine {
 		}
 	}
 
+	public void initEnvironment() {
+		EnvironmentParser environment = new EnvironmentParser();
+		ViscosityParser visc = new ViscosityParser();
+		COMParser com = new COMParser();
+		WallParser wall = new WallParser();
+		GravityParser grav = new GravityParser();
+
+		viscMag = visc.returnViscosity(environmentString);
+		comList = com.returnCOM(environmentString);
+		wallList = wall.returnWalls(environmentString);
+		gravityList = grav.returnGravity(environmentString);
+
+	}
+
+	/*
+	 * Both initAssembly() and clearAssembly() below are called in
+	 * toggleAssembly(), which is called in doFrame()
+	 */
+
 	public void initAssembly(String assembly) {
 
 		List<FixedMass> fixedmasses;
 		List<Mass> masses;
 		List<Muscle> muscles;
 		List<Spring> springs;
-
-		// Remember how to cast: muscles = (List<Muscle>)(List<?>)
-		// muscle.readFile(object);
 
 		FixedParser fixed = new FixedParser();
 		MassParser mass = new MassParser();
@@ -314,15 +284,26 @@ public class Springies extends JGEngine {
 		totalSprings.clear();
 	}
 
-	public static void createSpringies(String environment) {
-		final Springies sp = new Springies(environment);
+	public void toggleAssembly() {
+		if (getKey('N')) {
 
-		JFrame frame = new JFrame(TITLE);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(sp, BorderLayout.CENTER);
-		frame.pack();
+			FileChooser fc = new FileChooser("assembly");
+			fc.setVisible(true);
+			try {
+				Thread.sleep(6000);
+			} catch (InterruptedException e) {
 
-		frame.setVisible(true);
+				e.printStackTrace();
+			}
+			initAssembly(fc.getAssemblyString());
+			clearKey('N');
+		}
+
+		if (getKey('C')) {
+			clearAssembly();
+			clearKey('C');
+
+		}
 
 	}
 
@@ -378,7 +359,7 @@ public class Springies extends JGEngine {
 			clearKey('=');
 		}
 		clearLastKey();
-
+		// Change size of walled area
 		if (getKey(KeyEvent.VK_UP)) {
 			for (WallSetup ws : totalWalls) {
 				ws.increaseWall();
@@ -392,6 +373,24 @@ public class Springies extends JGEngine {
 			clearKey(KeyEvent.VK_DOWN);
 		}
 		clearLastKey();
+	}
+	
+	/**
+	 * createSpringies() is called in the FileChooser. 
+	 * Environment is the XML Environment string.
+	 */
+
+	
+	public static void createSpringies(String environment) {
+		final Springies sp = new Springies(environment);
+
+		JFrame frame = new JFrame(TITLE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add(sp, BorderLayout.CENTER);
+		frame.pack();
+
+		frame.setVisible(true);
+
 	}
 
 }

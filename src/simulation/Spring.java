@@ -9,6 +9,13 @@ public class Spring extends PhysicalObject {
 	private Mass myMass1, myMass2;
 	private double myRestLength;
 	private double mySpringyness;
+	private double dx;
+	private double dy;
+	private double dist;
+	private double magnitude;
+	private double xComp;
+	private double yComp;
+
 	private int clear = 0;
 
 	/* Spring constructor with springyness */
@@ -22,25 +29,38 @@ public class Spring extends PhysicalObject {
 
 	@Override
 	protected void paintShape() {
-		if(clear != 1){
-		myEngine.setColor(JGColor.green);
-		myEngine.drawLine(myMass1.getMassX(), myMass1.getMassY(),
-				myMass2.getMassX(), myMass2.getMassY());
-		springForce();
+		if (clear != 1) {
+			if (dist == myRestLength) {
+				myEngine.setColor(JGColor.green);
+				myEngine.drawLine(myMass1.getMassX(), myMass1.getMassY(),
+						myMass2.getMassX(), myMass2.getMassY());
+				springForce();
+			}
+			else if(dist > myRestLength){
+				myEngine.setColor(JGColor.orange);
+				myEngine.drawLine(myMass1.getMassX(), myMass1.getMassY(),
+						myMass2.getMassX(), myMass2.getMassY());
+				springForce();
+			}
+			else if(dist < myRestLength){
+				myEngine.setColor(JGColor.yellow);
+				myEngine.drawLine(myMass1.getMassX(), myMass1.getMassY(),
+						myMass2.getMassX(), myMass2.getMassY());
+				springForce();
+			}
 		}
 
 	}
 
 	public void springForce() {
 
-		double dx = myMass2.getMassX() - myMass1.getMassX();
-		double dy = myMass2.getMassY() - myMass1.getMassY();
-		double dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-		double magnitude = mySpringyness * (dist - myRestLength) * 1800;
+		dx = myMass2.getMassX() - myMass1.getMassX();
+		dy = myMass2.getMassY() - myMass1.getMassY();
+		dist = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+		magnitude = mySpringyness * (dist - myRestLength) * 1800;
 
-		double xComp = dx / dist * magnitude;
-		double yComp = dy / dist * magnitude;
-
+		xComp = dx / dist * magnitude;
+		yComp = dy / dist * magnitude;
 
 		myMass1.setForce(xComp, yComp);
 		myMass2.setForce(-xComp, -yComp);
@@ -50,7 +70,7 @@ public class Spring extends PhysicalObject {
 		return myMass1 + " " + myMass2 + " rl:" + myRestLength + " K:"
 				+ mySpringyness;
 	}
-	
+
 	public void terminate() {
 		clear = 1;
 	}

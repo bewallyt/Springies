@@ -1,4 +1,4 @@
-import initialize.SimpleFileChooser;
+import initialize.FileChooser;
 
 /**
  * Creates window that can be moved, resized, and closed by the user.
@@ -9,8 +9,8 @@ import initialize.SimpleFileChooser;
 public class Main {
 
 	public static void main(String args[]) {
-		SimpleFileChooser sfc = new SimpleFileChooser();
-		sfc.setVisible(true);
+		FileChooser fc = new FileChooser("environment");
+		fc.setVisible(true);
 
 	}
 

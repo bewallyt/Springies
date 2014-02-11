@@ -27,7 +27,7 @@ public class CenterOfMass extends Force {
 		double sumY = 0;
 		double avgX = 0;
 		double avgY = 0;
-		
+
 		int max = masses.size();
 
 		for (int i = 0; i < max; i++) {
@@ -58,7 +58,7 @@ public class CenterOfMass extends Force {
 	}
 
 	public Vec2 obtainForce(Mass m) {
-		
+
 		double ang = calcAngle(m);
 		double dis = calcDistance(m);
 		Vec2 force = super.deriveForce(mag, exp, ang, dis);
